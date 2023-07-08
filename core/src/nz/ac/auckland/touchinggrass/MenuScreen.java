@@ -2,8 +2,9 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,18 +12,23 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class MenuScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private Texture background;
     private Stage stage;
+    private Pixmap cursorPixmap;
+    private ImageButton playButton;
+    private ImageButton mapsButton;
+    private ImageButton tutorialButton;
+    private ImageButton helpButton;
 
     @Override
     public void show() {
         batch = new SpriteBatch();
         background = new Texture(Gdx.files.internal("../assets/menu.png"));
+        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -44,16 +50,16 @@ public class MenuScreen extends ScreenAdapter {
         ImageButton.ImageButtonStyle helpStyle = new ImageButton.ImageButtonStyle();
         helpStyle.up = helpDrawable;
 
-        ImageButton playButton = new ImageButton(playStyle);
+        playButton = new ImageButton(playStyle);
         playButton.setBounds(28, 210, 186, 40);
 
-        ImageButton mapsButton = new ImageButton(mapsStyle);
+        mapsButton = new ImageButton(mapsStyle);
         mapsButton.setBounds(28, 165, 327, 40);
 
-        ImageButton tutorialButton = new ImageButton(tutorialStyle);
+        tutorialButton = new ImageButton(tutorialStyle);
         tutorialButton.setBounds(28, 120, 280, 40);
 
-        ImageButton helpButton = new ImageButton(helpStyle);
+        helpButton = new ImageButton(helpStyle);
         helpButton.setBounds(28, 75, 80, 40);
 
         playButton.addListener(new ClickListener() {
@@ -98,6 +104,17 @@ public class MenuScreen extends ScreenAdapter {
     public void render(float delta) {
         super.render(delta);
 
+        int mouseX = Gdx.input.getX();
+        int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+        boolean hovering = playButton.isOver() || mapsButton.isOver() || tutorialButton.isOver() || helpButton.isOver();
+
+        if (hovering) {
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
+        } else {
+            Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
+        }
+
         batch.begin();
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
@@ -112,5 +129,6 @@ public class MenuScreen extends ScreenAdapter {
         batch.dispose();
         background.dispose();
         stage.dispose();
+        cursorPixmap.dispose();
     }
 }
