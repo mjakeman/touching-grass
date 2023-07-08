@@ -49,14 +49,9 @@ public class PlayScreen extends ScreenAdapter {
 
         player = new Player();
         player.position = new Vector3(0, 4, 0);
-        mapRenderer = new MapRenderer();
 
-//		camera = new OrthographicCamera();
-//		camera.setToOrtho(false, w, h);
-//		camera.update();
-
-        tiledMap = new TmxMapLoader().load("isometric-sandbox-map.tmx");
-        // Gdx.input.setInputProcessor(this);
+        tiledMap = new TmxMapLoader().load("test-map.tmx");
+        mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
@@ -68,6 +63,8 @@ public class PlayScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         super.render(delta);
+
+        stateTime += delta;
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -81,7 +78,7 @@ public class PlayScreen extends ScreenAdapter {
 //        tiledMapRenderer.render();
 
         handleCameraInput();
-        player.handleInput(player, deltaTime);
+        player.handleInput(player, delta);
 
         batch.begin();
         mapRenderer.drawGround(batch);

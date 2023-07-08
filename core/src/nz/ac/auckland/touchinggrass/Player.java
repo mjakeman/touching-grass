@@ -58,10 +58,10 @@ public class Player extends Entity{
     public void handleInput(Player player, float deltaTime) {
         animationTime += deltaTime;
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player.position.z += PLAYER_MOVE;
+            player.position.z -= PLAYER_MOVE;
             currentAnimation = leftAnimation;
         } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player.position.z -= PLAYER_MOVE;
+            player.position.z += PLAYER_MOVE;
             currentAnimation = rightAnimation;
         } else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player.position.x += PLAYER_MOVE;
