@@ -27,11 +27,8 @@ public class MapRenderer {
     private TiledMap tiledMap;
 
 
-    public MapRenderer() {
-        tiledMap = new TmxMapLoader().load("isometric-sandbox-map.tmx");
-        grass = new Texture(Gdx.files.internal("grass.png"));
-        //sky = new Texture(Gdx.files.internal("sky.png"));
-        map = generateMap();
+    public MapRenderer(TiledMap tiledMap) {
+        this.tiledMap = tiledMap;
     }
 
     public void drawGround(SpriteBatch batch) {
@@ -101,34 +98,5 @@ public class MapRenderer {
 //                }
             }
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            map = generateMap();
-        }
-    }
-
-    private int[][] generateMap(){
-        Random r = new Random();
-        int rSize = 50;//r.nextInt(25);
-
-        if(rSize < 10) {
-            rSize = 10;
-        }
-
-        int[][] map = new int[rSize][rSize];
-
-        for(int row = 0; row < map.length; row++) {
-            for(int col = 0; col < map.length; col++) {
-                int num = r.nextInt(10);
-
-                if(num > 7) {
-                    map[row][col] = 0;
-                }else {
-                    map[row][col] = 1;
-                }
-            }
-        }
-
-        return map;
     }
 }

@@ -46,21 +46,13 @@ public class PlayScreen extends ScreenAdapter {
         img = new Texture("badlogic.jpg");
 
         player = new Player();
-        player.position = new Vector3(0, 4, 0);
+        player.position = new Vector3(5, 0, 5);
 
-        mapRenderer = new MapRenderer();
-
-//		camera = new OrthographicCamera();
-//		camera.setToOrtho(false, w, h);
-//		camera.update();
-
-        tiledMap = new TmxMapLoader().load("isometric-sandbox-map.tmx");
-        // Gdx.input.setInputProcessor(this);
+        tiledMap = new TmxMapLoader().load("test-map.tmx");
+        mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
-
-        player.position = new Vector3(50, 0, 30);
 
         shapeRenderer = new ShapeRenderer();
         isometricRenderer = new IsometricRenderer();
@@ -85,12 +77,16 @@ public class PlayScreen extends ScreenAdapter {
         isometricRenderer.draw(batch, player);
         batch.end();
 
+        // drawDebugLine();
+    }
+
+    private void drawDebugLine() {
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 0, 0, 1); // Red line
-		shapeRenderer.line(0, 0, screenPlayerCentre.x, screenPlayerCentre.y);
+        shapeRenderer.line(0, 0, screenPlayerCentre.x, screenPlayerCentre.y);
         shapeRenderer.end();
     }
 
