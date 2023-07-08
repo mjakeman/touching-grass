@@ -23,8 +23,7 @@ public class PlayScreen extends ScreenAdapter {
     IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
     ParticleSystem particleSystem;
-
-
+    HealthBar healthBar;
 
     MapRenderer mapRenderer;
 
@@ -37,6 +36,7 @@ public class PlayScreen extends ScreenAdapter {
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
+        healthBar = new HealthBar(batch, 100);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class PlayScreen extends ScreenAdapter {
         batch.begin();
         mapRenderer.drawGround(batch);
         batch.end();
-
+        healthBar.render();
         player.draw(camera.combined, stateTime);
 
         // drawDebugLine();
@@ -107,6 +107,7 @@ public class PlayScreen extends ScreenAdapter {
         super.dispose();
         batch.dispose();
         img.dispose();
+        healthBar.dispose();
     }
 
     @Override
