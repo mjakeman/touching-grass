@@ -22,12 +22,11 @@ public class PlayScreen extends ScreenAdapter {
     IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
 
-    private static final float PLAYER_MOVE = 0.05f;
+    private static final float PLAYER_MOVE = 0.15f;
 
     MapRenderer mapRenderer;
 
     Player player;
-    Player player2;
 
     float unitScale = 1/32f;
 
@@ -48,8 +47,6 @@ public class PlayScreen extends ScreenAdapter {
 
         player = new Player();
         player.position = new Vector3(0, 4, 0);
-        player2 = new Player();
-        player2.position = new Vector3(1, 4, 1);
 
         mapRenderer = new MapRenderer();
 
@@ -62,6 +59,8 @@ public class PlayScreen extends ScreenAdapter {
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
+
+        player.position = new Vector3(50, 0, 30);
 
         shapeRenderer = new ShapeRenderer();
         isometricRenderer = new IsometricRenderer();
@@ -83,7 +82,6 @@ public class PlayScreen extends ScreenAdapter {
 
         batch.begin();
         mapRenderer.drawGround(batch);
-        isometricRenderer.draw(batch, player2);
         isometricRenderer.draw(batch, player);
         batch.end();
 
@@ -122,11 +120,11 @@ public class PlayScreen extends ScreenAdapter {
     public void handleInput() {
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.zoom -= 0.003f;
+            camera.zoom -= 0.03f;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.zoom += 0.003f;
+            camera.zoom += 0.03f;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.P)) {
@@ -134,9 +132,9 @@ public class PlayScreen extends ScreenAdapter {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player.position.z += PLAYER_MOVE;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             player.position.z -= PLAYER_MOVE;
+        }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            player.position.z += PLAYER_MOVE;
         }else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player.position.x += PLAYER_MOVE;
         }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {

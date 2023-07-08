@@ -22,9 +22,6 @@ public class MapRenderer {
     private final static int NUM_VERTICES = 20;
     protected float[] vertices = new float[NUM_VERTICES];
 
-    public static final int TILE_WIDTH = 34;
-    public static final int TILE_HEIGHT = 34;
-
     private int [][] map;
     private Texture grass;
     private TiledMap tiledMap;
@@ -49,11 +46,11 @@ public class MapRenderer {
         final Color batchColor = batch.getColor();
         final float color = Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
 
-        for(int row = layer.getHeight() - 1; row >= 0; row--) {
-            for(int col = layer.getWidth() - 1; col >= 0; col--) {
+        for(int row = layer.getWidth() - 1; row >= 0; row--) {
+            for(int col = 0; col <= layer.getWidth() - 1; col++) {
                 Vector2 coords = IsometricUtils.isoToScreen(new Vector3(row, 0, col));
 
-                var cell = layer.getCell(row, col);
+                var cell = layer.getCell(col, row);
                 if (cell == null) continue;
 
                 var tile = cell.getTile();
