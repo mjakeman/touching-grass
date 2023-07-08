@@ -14,6 +14,6 @@ public class Entity {
     }
 
     public void draw(Batch batch) {
-        batch.draw(texture, position.x, position.y);
+        batch.draw(texture, position.x, position.z);
     }
 }
