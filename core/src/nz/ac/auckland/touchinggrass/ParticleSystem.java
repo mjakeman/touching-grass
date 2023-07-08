@@ -87,7 +87,7 @@ public class ParticleSystem {
         for (int i = 0; i < numParticles; i++) {
 
             // Generate a velocity magnitude and angle
-            double velMagnitude = Math.random();
+            double velMagnitude = Math.random() * 0.3;
             double velAngle = Math.random() * 360;
 
             // Decompose into x/y velocity
@@ -156,7 +156,8 @@ public class ParticleSystem {
         particle.velY *= particle.drag;
 
         // Gravity
-        particle.velY += 0.04f;
+//        particle.velY += 0.04f;
+        particle.velX += 0.06f * (Math.random() - 0.5);
 
         // Wind/Sway
         particle.velX += 0.02f * (Math.random() - 0.5);

@@ -118,7 +118,7 @@ public class Player extends Entity{
         var translation = orientation.nor().scl(PLAYER_MOVE);
         player.position.add(translation);
 
-        Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getExhaust());
+        Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
         particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
     }
 
