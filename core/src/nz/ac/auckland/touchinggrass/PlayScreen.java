@@ -22,8 +22,7 @@ public class PlayScreen extends ScreenAdapter {
     IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
 
-    private Matrix4 isoTransform;
-    private Matrix4 invIsotransform;
+    private static final float PLAYER_MOVE = 0.05f;
 
     MapRenderer mapRenderer;
 
@@ -77,6 +76,7 @@ public class PlayScreen extends ScreenAdapter {
 
         batch.setProjectionMatrix(camera.combined);
 
+        followCamera(delta);
         camera.update();
 
 //        tiledMapRenderer.setView(camera);
@@ -97,7 +97,8 @@ public class PlayScreen extends ScreenAdapter {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 0, 0, 1); // Red line
-//		shapeRenderer.line(0, 0, dest.x, dest.y);
+        System.out.println(player.getCentre());
+		shapeRenderer.line(0, 0, player.getCentre().x, player.getCentre().y);
         shapeRenderer.end();
     }
 
@@ -112,6 +113,16 @@ public class PlayScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
+    }
+
+    public void followCamera(float deltaTime) {
+        Vector2 desiredPosition = IsometricUtils.isoToScreen(player.getCentre());
+
+        float lerp = 0.2f;
+        Vector3 position = camera.position;
+        position.x += (desiredPosition.x - position.x) * lerp * 10 * deltaTime;
+        position.y += (desiredPosition.y - position.y) * lerp * 10 * deltaTime;
+
     }
 
     public void handleInput() {
@@ -129,13 +140,13 @@ public class PlayScreen extends ScreenAdapter {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.position.x -= 1;
+            player.position.z += PLAYER_MOVE;
         }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.position.x += 1;
+            player.position.z -= PLAYER_MOVE;
         }else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.position.y += 1;
+            player.position.x += PLAYER_MOVE;
         }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.position.y -= 1;
+            player.position.x -= PLAYER_MOVE;
         }
     }
 }

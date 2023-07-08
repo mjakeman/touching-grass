@@ -17,11 +17,4 @@ public class IsometricUtils {
         return new Vector2(screenX, screenY);
     }
 
-    public static Vector3 cartesianToIso(Vector3 pt) {
-        var tempPt = new Vector3(0, pt.y, 0);
-        tempPt.x = (pt.x - pt.z) * (TILE_WIDTH / 2f);
-        tempPt.z = (pt.x + pt.z) * (TILE_HEIGHT / 4f);
-        return tempPt;
-    }
-
 }
