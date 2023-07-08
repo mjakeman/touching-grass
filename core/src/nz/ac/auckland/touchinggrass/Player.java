@@ -99,18 +99,18 @@ public class Player extends Entity{
     public void handleInput(Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             orientation.z = -1;
             direction = Direction.LEFT;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             orientation.z = 1;
             direction = Direction.RIGHT;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             orientation.x = 1;
             direction = Direction.UP;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             orientation.x = -1;
             direction = Direction.DOWN;
         }
