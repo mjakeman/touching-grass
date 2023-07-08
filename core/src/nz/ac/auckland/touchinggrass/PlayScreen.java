@@ -1,18 +1,21 @@
 package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PlayScreen extends ScreenAdapter {
 
@@ -24,16 +27,18 @@ public class PlayScreen extends ScreenAdapter {
     ShapeRenderer shapeRenderer;
     ParticleSystem particleSystem;
     HealthBar healthBar;
-
     MapRenderer mapRenderer;
 
     Player player;
     Entity entity;
 
     float unitScale = 1/32f;
-    
+
     private float stateTime = 0;
     private Scene scene;
+
+    private Stage stage;
+    private ImageButton backButton;
 
     PlayScreen(SpriteBatch batch)
     {
@@ -45,7 +50,6 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         super.show();
 
-        float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
@@ -59,6 +63,25 @@ public class PlayScreen extends ScreenAdapter {
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
+
+        TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
+        ImageButton.ImageButtonStyle backStyle = new ImageButton.ImageButtonStyle();
+        backStyle.up = backDrawable;
+
+        backButton = new ImageButton(backStyle);
+        backButton.setBounds(10, h - 50, 100, 40); // Adjust the position and size of the button here
+
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MenuScreen menuScreen = new MenuScreen();
+                ((Game) Gdx.app.getApplicationListener()).setScreen(menuScreen);
+            }
+        });
+
+        stage = new Stage();
+        stage.addActor(backButton);
+        Gdx.input.setInputProcessor(stage);
 
         shapeRenderer = new ShapeRenderer();
         isometricRenderer = new IsometricRenderer();
@@ -102,6 +125,8 @@ public class PlayScreen extends ScreenAdapter {
         healthBar.render();
         // player.draw(camera.combined, stateTime);
         scene.draw(camera.combined, stateTime);
+
+        stage.draw();
 
         // drawDebugLine();
 
