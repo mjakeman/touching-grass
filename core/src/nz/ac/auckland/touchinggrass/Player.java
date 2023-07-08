@@ -61,18 +61,18 @@ public class Player extends Entity{
 
         Vector3 direction = new Vector3();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             direction.z = -1;
             currentAnimation = leftAnimation;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             direction.z = 1;
             currentAnimation = rightAnimation;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             direction.x = 1;
             currentAnimation = upAnimation;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             direction.x = -1;
             currentAnimation = downAnimation;
         }
