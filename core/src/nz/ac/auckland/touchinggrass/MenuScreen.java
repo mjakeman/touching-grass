@@ -4,15 +4,19 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class MenuScreen extends ScreenAdapter {
     private SpriteBatch batch;
@@ -23,6 +27,8 @@ public class MenuScreen extends ScreenAdapter {
     private ImageButton mapsButton;
     private ImageButton tutorialButton;
     private ImageButton helpButton;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
 
     @Override
     public void show() {
@@ -30,7 +36,10 @@ public class MenuScreen extends ScreenAdapter {
         background = new Texture(Gdx.files.internal("../assets/menu.png"));
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
 
-        stage = new Stage();
+        camera = new OrthographicCamera();
+        viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         TextureRegionDrawable playDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/play.png"))));
@@ -102,10 +111,17 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        super.render(delta);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        int mouseX = Gdx.input.getX();
-        int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+        if (viewport.getScreenWidth() != Gdx.graphics.getWidth() || viewport.getScreenHeight() != Gdx.graphics.getHeight()) {
+            viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+            // Adjust button positions based on the new viewport dimensions
+            playButton.setBounds(28, viewport.getWorldHeight() - 210, 186, 40);
+            mapsButton.setBounds(28, viewport.getWorldHeight() - 165, 327, 40);
+            tutorialButton.setBounds(28, viewport.getWorldHeight() - 120, 280, 40);
+            helpButton.setBounds(28, viewport.getWorldHeight() - 75, 80, 40);
+        }
 
         boolean hovering = playButton.isOver() || mapsButton.isOver() || tutorialButton.isOver() || helpButton.isOver();
 
@@ -115,13 +131,21 @@ public class MenuScreen extends ScreenAdapter {
             Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         }
 
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         batch.end();
 
         // Update and draw the stage
         stage.act(delta);
         stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+        camera.setToOrtho(false, viewport.getWorldWidth(), viewport.getWorldHeight());
+        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
     }
 
     @Override
