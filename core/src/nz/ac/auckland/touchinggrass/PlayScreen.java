@@ -1,6 +1,7 @@
 package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +22,7 @@ public class PlayScreen extends ScreenAdapter {
     OrthographicCamera camera;
     IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
+    ParticleSystem particleSystem;
 
 
 
@@ -58,6 +60,7 @@ public class PlayScreen extends ScreenAdapter {
 
         shapeRenderer = new ShapeRenderer();
         isometricRenderer = new IsometricRenderer();
+        particleSystem = new ParticleSystem();
     }
 
     @Override
@@ -66,7 +69,7 @@ public class PlayScreen extends ScreenAdapter {
 
         stateTime += delta;
 
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+        Gdx.gl.glClearColor(0f, 0.6f, 0.8f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
@@ -82,8 +85,9 @@ public class PlayScreen extends ScreenAdapter {
 
         batch.begin();
         mapRenderer.drawGround(batch);
-        player.draw(batch, stateTime);
         batch.end();
+
+        player.draw(camera.combined, stateTime);
 
         // drawDebugLine();
     }
@@ -133,6 +137,10 @@ public class PlayScreen extends ScreenAdapter {
 
         if(Gdx.input.isKeyPressed(Input.Keys.P)) {
             System.out.println(camera.position);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+
         }
 
 //        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
