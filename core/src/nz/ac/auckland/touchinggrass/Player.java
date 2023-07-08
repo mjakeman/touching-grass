@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class Player extends Entity{
@@ -57,19 +58,28 @@ public class Player extends Entity{
 
     public void handleInput(Player player, float deltaTime) {
         animationTime += deltaTime;
+
+        Vector3 direction = new Vector3();
+
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player.position.z -= PLAYER_MOVE;
+            direction.z = -1;
             currentAnimation = leftAnimation;
-        } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player.position.z += PLAYER_MOVE;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            direction.z = 1;
             currentAnimation = rightAnimation;
-        } else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player.position.x += PLAYER_MOVE;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            direction.x = 1;
             currentAnimation = upAnimation;
-        } else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player.position.x -= PLAYER_MOVE;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            direction.x = -1;
             currentAnimation = downAnimation;
         }
+
+        System.out.println(direction);
+        var translation = direction.nor().scl(PLAYER_MOVE);
+        player.position.add(translation);
     }
 
     private static Texture createTexture() {
