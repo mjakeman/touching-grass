@@ -22,13 +22,15 @@ public class PlayScreen extends ScreenAdapter {
     IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
 
-    private static final float PLAYER_MOVE = 0.15f;
+
 
     MapRenderer mapRenderer;
 
     Player player;
 
     float unitScale = 1/32f;
+    
+    private float stateTime = 0;
 
     PlayScreen(SpriteBatch batch)
     {
@@ -46,10 +48,15 @@ public class PlayScreen extends ScreenAdapter {
         img = new Texture("badlogic.jpg");
 
         player = new Player();
-        player.position = new Vector3(5, 0, 5);
+        player.position = new Vector3(0, 4, 0);
+        mapRenderer = new MapRenderer();
 
-        tiledMap = new TmxMapLoader().load("test-map.tmx");
-        mapRenderer = new MapRenderer(tiledMap);
+//		camera = new OrthographicCamera();
+//		camera.setToOrtho(false, w, h);
+//		camera.update();
+
+        tiledMap = new TmxMapLoader().load("isometric-sandbox-map.tmx");
+        // Gdx.input.setInputProcessor(this);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
@@ -70,11 +77,15 @@ public class PlayScreen extends ScreenAdapter {
         followCamera(delta);
         camera.update();
 
-        handleInput();
+//        tiledMapRenderer.setView(camera);
+//        tiledMapRenderer.render();
+
+        handleCameraInput();
+        player.handleInput(player, deltaTime);
 
         batch.begin();
         mapRenderer.drawGround(batch);
-        isometricRenderer.draw(batch, player);
+        player.draw(batch, stateTime);
         batch.end();
 
         // drawDebugLine();
@@ -113,7 +124,7 @@ public class PlayScreen extends ScreenAdapter {
 
     }
 
-    public void handleInput() {
+    public void handleCameraInput() {
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
             camera.zoom -= 0.03f;
@@ -127,14 +138,14 @@ public class PlayScreen extends ScreenAdapter {
             System.out.println(camera.position);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player.position.z -= PLAYER_MOVE;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player.position.z += PLAYER_MOVE;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player.position.x += PLAYER_MOVE;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player.position.x -= PLAYER_MOVE;
-        }
+//        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+//            player.position.z += PLAYER_MOVE;
+//        }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+//            player.position.z -= PLAYER_MOVE;
+//        }else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+//            player.position.x += PLAYER_MOVE;
+//        }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+//            player.position.x -= PLAYER_MOVE;
+//        }
     }
 }
