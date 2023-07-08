@@ -79,9 +79,6 @@ public class PlayScreen extends ScreenAdapter {
         followCamera(delta);
         camera.update();
 
-//        tiledMapRenderer.setView(camera);
-//        tiledMapRenderer.render();
-
         handleInput();
 
         batch.begin();
@@ -90,15 +87,12 @@ public class PlayScreen extends ScreenAdapter {
         isometricRenderer.draw(batch, player);
         batch.end();
 
-//        System.out.println(String.format("a %f %f", dest.x, dest.y));
+        Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
 
-//        Vector3 dest = IsometricUtils.isoToCartesian(new Vector3(10, 10, 0));
-//        System.out.println(String.format("b %f %f", dest.x, dest.y));
-
+        shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 0, 0, 1); // Red line
-        System.out.println(player.getCentre());
-		shapeRenderer.line(0, 0, player.getCentre().x, player.getCentre().y);
+		shapeRenderer.line(0, 0, screenPlayerCentre.x, screenPlayerCentre.y);
         shapeRenderer.end();
     }
 

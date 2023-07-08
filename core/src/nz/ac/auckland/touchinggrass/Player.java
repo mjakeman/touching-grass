@@ -11,6 +11,6 @@ public class Player extends Entity{
     }
 
     public Vector3 getCentre() {
-        return new Vector3(position).add(0.5f, 0.5f, -0.5f);
+        return new Vector3(position).add(0.5f, 2f, -0.5f);
     }
 }
