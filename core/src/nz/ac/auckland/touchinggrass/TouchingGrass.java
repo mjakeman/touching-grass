@@ -21,13 +21,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class TouchingGrass extends Game {
 
 	private SpriteBatch batch;
-	private PlayScreen gScreen;
+
+	private MenuScreen menuScreen;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		gScreen = new PlayScreen(batch);
-		setScreen(gScreen);
+		menuScreen = new MenuScreen();
+		setScreen(menuScreen);
 	}
 
 	@Override
