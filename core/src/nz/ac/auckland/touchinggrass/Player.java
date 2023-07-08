@@ -28,6 +28,8 @@ public class Player extends Entity{
     public Player() {
         super(createTexture());
 
+        nonBatchable = true;
+
         // super(new Texture(Gdx.files.internal("grass.png")));
         Texture spriteSheet = getTexture();
 
@@ -53,7 +55,7 @@ public class Player extends Entity{
     }
 
     public Vector3 getCentre() {
-        return new Vector3(position).add(0.5f, 2f, 0.5f);
+        return new Vector3(position).add(0.5f, 0.5f, 0.5f);
     }
 
     public Vector3 getExhaust() {
@@ -76,6 +78,7 @@ public class Player extends Entity{
         };
     }
 
+    @Override
     public void draw(Matrix4 projectionMatrix, float stateTime) {
         drawExhaust(projectionMatrix, stateTime);
         drawPlayer(projectionMatrix, stateTime);

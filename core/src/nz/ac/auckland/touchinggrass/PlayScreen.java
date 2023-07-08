@@ -28,10 +28,12 @@ public class PlayScreen extends ScreenAdapter {
     MapRenderer mapRenderer;
 
     Player player;
+    Entity entity;
 
     float unitScale = 1/32f;
     
     private float stateTime = 0;
+    private Scene scene;
 
     PlayScreen(SpriteBatch batch)
     {
@@ -50,7 +52,7 @@ public class PlayScreen extends ScreenAdapter {
         img = new Texture("badlogic.jpg");
 
         player = new Player();
-        player.position = new Vector3(0, 4, 0);
+        player.position = new Vector3(0, 0, 0);
 
         tiledMap = new TmxMapLoader().load("test-map.tmx");
         mapRenderer = new MapRenderer(tiledMap);
@@ -61,6 +63,17 @@ public class PlayScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         isometricRenderer = new IsometricRenderer();
         particleSystem = new ParticleSystem();
+
+        scene = new Scene();
+        scene.addObject(player);
+
+        entity = new Entity(new Texture("grass.png"));
+        entity.position = new Vector3(0, 1, 0);
+        scene.addObject(entity);
+
+        entity = new Entity(new Texture("grass.png"));
+        entity.position = new Vector3(0, -1, 0);
+        scene.addObject(entity);
     }
 
     @Override
@@ -87,9 +100,12 @@ public class PlayScreen extends ScreenAdapter {
         mapRenderer.drawGround(batch);
         batch.end();
         healthBar.render();
-        player.draw(camera.combined, stateTime);
+        // player.draw(camera.combined, stateTime);
+        scene.draw(camera.combined, stateTime);
 
         // drawDebugLine();
+
+
     }
 
     private void drawDebugLine() {
