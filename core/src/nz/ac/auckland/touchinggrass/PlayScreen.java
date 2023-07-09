@@ -55,13 +55,13 @@ public class PlayScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
 
-        player.position = new Vector3(9, 2, 6);
+
         try {
             player = new Player();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        player.position = new Vector3(0, 4, 0);
+        player.position = new Vector3(9, 2, 6);
 
         tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);
