@@ -2,6 +2,7 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,6 +41,8 @@ public class IntroLevel extends Level {
 
     private Pixmap cursorPixmap;
 
+    private Sound click;
+
     @Override
     public Scene setup(OrthographicCamera camera) {
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
@@ -48,6 +51,8 @@ public class IntroLevel extends Level {
 
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
+
+        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
 
         scene = new Scene(camera);
 
@@ -83,6 +88,9 @@ public class IntroLevel extends Level {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                click.play();
+
                 MenuScreen menuScreen = new MenuScreen();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(menuScreen);
             }

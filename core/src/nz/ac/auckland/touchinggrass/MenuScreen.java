@@ -3,6 +3,7 @@ package nz.ac.auckland.touchinggrass;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -26,12 +27,15 @@ public class MenuScreen extends ScreenAdapter {
     private ImageButton helpButton;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
+    private Sound click;
 
     @Override
     public void show() {
         batch = new SpriteBatch();
         background = new Texture(Gdx.files.internal("../assets/menu.png"));
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
+
+        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
 
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -57,6 +61,9 @@ public class MenuScreen extends ScreenAdapter {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                click.play();
+
                 PlayScreen playScreen = new PlayScreen(batch);
                 ((Game) Gdx.app.getApplicationListener()).setScreen(playScreen);
             }
@@ -65,6 +72,9 @@ public class MenuScreen extends ScreenAdapter {
         helpButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                click.play();
+
                 HelpScreen helpScreen = new HelpScreen();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(helpScreen);
             }

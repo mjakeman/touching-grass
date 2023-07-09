@@ -42,6 +42,8 @@ public class PlayScreen extends ScreenAdapter {
 
     private Pixmap cursorPixmap;
 
+    private Sound click;
+
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
@@ -51,6 +53,8 @@ public class PlayScreen extends ScreenAdapter {
     @Override
     public void show() {
         super.show();
+
+        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
 
         // Setup UI
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
@@ -67,6 +71,9 @@ public class PlayScreen extends ScreenAdapter {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                click.play();
+
                 MenuScreen menuScreen = new MenuScreen();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(menuScreen);
             }
