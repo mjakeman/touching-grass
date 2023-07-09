@@ -75,6 +75,11 @@ public class IntroLevel extends Level {
             }));
             sequencer.addAction(new Sequencer2.Action(2, () -> {
                 screen.messageDialog.dispose();
+                screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
+                screen.messageDialog.setMessage("Bryan the NPC: Go through that portal to continue");
+            }));
+            sequencer.addAction(new Sequencer2.Action(2, () -> {
+                screen.messageDialog.dispose();
                 screen.messageDialog = null;
             }));
 

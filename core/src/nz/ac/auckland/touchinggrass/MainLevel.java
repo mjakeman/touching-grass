@@ -57,7 +57,7 @@ public class MainLevel extends Level {
         scene = new Scene(screen.camera);
 
         player = new Player();
-        player.position = new Vector3(9, 1, 6);
+        player.position = new Vector3(9, 1, 10);
         scene.addObject(player);
 
         tiledMap = new TmxMapLoader().load("test-map-3d.tmx");

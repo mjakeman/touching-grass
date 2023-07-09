@@ -146,7 +146,7 @@ public class Player extends Entity{
                         camera.zoom = -camera.zoom
                 );
                 sequencer.addAction(() ->
-                        sequencer.pause(10000)
+                        sequencer.pause(5000)
                 );
                 sequencer.addAction(() ->
                         camera.zoom = -camera.zoom
