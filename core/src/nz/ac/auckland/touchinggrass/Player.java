@@ -146,7 +146,7 @@ public class Player extends Entity{
                         camera.zoom = -camera.zoom
                 );
                 sequencer.addAction(() ->
-                        sequencer.pause(15000)
+                        sequencer.pause(10000)
                 );
                 sequencer.addAction(() ->
                         camera.zoom = -camera.zoom
@@ -162,7 +162,7 @@ public class Player extends Entity{
                         setToggleEnlargeSprite(true)
                 );
                 sequencer.addAction(() ->
-                        sequencer.pause(20000)
+                        sequencer.pause(10000)
                 );
                 sequencer.addAction(() ->
                         setToggleEnlargeSprite(false)
