@@ -12,6 +12,9 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 import java.util.Objects;
 
 public class Player extends Entity{
@@ -29,6 +32,8 @@ public class Player extends Entity{
 
     public Player() throws InterruptedException {
         super(createTexture());
+
+        nonBatchable = true;
 
         // super(new Texture(Gdx.files.internal("grass.png")));
         Texture spriteSheet = getTexture();
@@ -55,7 +60,7 @@ public class Player extends Entity{
     }
 
     public Vector3 getCentre() {
-        return new Vector3(position).add(0.5f, 2f, 0.5f);
+        return new Vector3(position).add(0.5f, 0.5f, 0.5f);
     }
 
     public Vector3 getExhaust() {
@@ -78,6 +83,7 @@ public class Player extends Entity{
         };
     }
 
+    @Override
     public void draw(Matrix4 projectionMatrix, float stateTime) {
         drawExhaust(projectionMatrix, stateTime);
         drawPlayer(projectionMatrix, stateTime);
@@ -98,7 +104,16 @@ public class Player extends Entity{
         particleSystem.update(shapeRenderer, stateTime);
     }
 
-    public void handleInput(Player player, float deltaTime) {
+    private List<SceneObject> getGroundMaterial(Scene scene) {
+        var translation = new Vector3(0, 1, -0.5f);
+        position.sub(translation);
+        var ground = scene.testAABBCollisions(this);
+        position.add(translation);
+
+        return ground;
+    }
+
+    public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -118,7 +133,20 @@ public class Player extends Entity{
         }
 
         var translation = orientation.nor().scl(PLAYER_MOVE);
+
+        // Collision detection
         player.position.add(translation);
+        var checkForCollision = scene.testAABBCollisions(player);
+        if (!checkForCollision.isEmpty()) {
+            scene.objects.removeAll(checkForCollision);
+        }
+
+        var ground = getGroundMaterial(scene);
+        for (var tile : ground) {
+            if (tile instanceof MowableTile mowable) {
+                mowable.mow();
+            }
+        }
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
         particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
