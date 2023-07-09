@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import java.util.function.Supplier;
+
 public class PlayScreen extends ScreenAdapter {
 
     SpriteBatch batch;
@@ -36,6 +38,7 @@ public class PlayScreen extends ScreenAdapter {
 
     private Stage stage;
     private ImageButton backButton;
+    private NPCEntity npcEntity;
 
     private Pixmap cursorPixmap;
 
@@ -56,14 +59,18 @@ public class PlayScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
 
-        try {
-            player = new Player();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        player.position = new Vector3(9, 2, 6);
+        scene = new Scene();
 
-        tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
+        player = new Player();
+        player.position = new Vector3(9, 2, 6);
+        scene.addObject(player);
+
+        npcEntity = new NPCEntity(() -> new Texture("old-mower-sheet.png"));
+        npcEntity.position = new Vector3(21, 2, 7);
+        npcEntity.direction = Direction.DOWN;
+        scene.addObject(npcEntity);
+
+        tiledMap = new TmxMapLoader().load("story-intro.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -92,9 +99,6 @@ public class PlayScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         particleSystem = new ParticleSystem();
 
-        scene = new Scene();
-        scene.addObject(player);
-
         mapRenderer.constructGround(scene);
     }
 
@@ -108,6 +112,8 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
+
+        scene.update(delta);
 
         followCamera(delta);
         camera.update();

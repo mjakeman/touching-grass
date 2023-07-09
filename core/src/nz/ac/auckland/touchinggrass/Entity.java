@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
-public class Entity extends SceneObject {
+public class Entity extends GameObject {
     Texture texture;
 
     public Entity(Texture texture) {

@@ -11,15 +11,26 @@ import java.util.List;
 public class Scene {
 
     List<SceneObject> objects;
+    List<GameObject> updatables;
     SpriteBatch batch;
 
     public Scene() {
         objects = new ArrayList<>();
+        updatables = new ArrayList<>();
         batch = new SpriteBatch();
     }
 
     public void addObject(SceneObject sceneObject) {
         objects.add(sceneObject);
+        if (sceneObject instanceof GameObject gameObject) {
+            updatables.add(gameObject);
+        }
+    }
+
+    public void update(float deltaTime) {
+        for (var object : updatables) {
+            object.update(deltaTime);
+        }
     }
 
     public void draw(Matrix4 projectionMatrix, float stateTime) {

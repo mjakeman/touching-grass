@@ -13,11 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
+import java.util.function.Supplier;
 
-import java.util.Objects;
-
-public class Player extends Entity{
+public class NPCEntity extends Entity {
     private final Animation<TextureRegion> leftAnimation;
     private final Animation<TextureRegion> downAnimation;
     private final Animation<TextureRegion> rightAnimation;
@@ -25,17 +23,17 @@ public class Player extends Entity{
     private static final float PLAYER_MOVE = 0.05f;
     final float FRAME_DURATION = 0.1f; // time between frames
     private static final int FRAME_SIZE = 32;
-    private Direction direction;
+    public Direction direction;
     private final SpriteBatch spriteBatch;
     private final ShapeRenderer shapeRenderer;
     private final ParticleSystem particleSystem;
 
-    public Player() {
-        super(createTexture());
+    public NPCEntity(Supplier<Texture> textureSupplier) {
+        super(textureSupplier.get());
 
         nonBatchable = true;
+        doesCollision = true;
 
-        // super(new Texture(Gdx.files.internal("grass.png")));
         Texture spriteSheet = getTexture();
 
         this.spriteBatch = new SpriteBatch();
@@ -90,6 +88,12 @@ public class Player extends Entity{
     }
 
     @Override
+    public void update(float deltaTime) {
+        Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(getCentre());
+        particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
+    }
+
+    @Override
     public void draw(Matrix4 projectionMatrix, float stateTime) {
         drawExhaust(projectionMatrix, stateTime);
         drawPlayer(projectionMatrix, stateTime);
@@ -117,58 +121,6 @@ public class Player extends Entity{
         position.add(translation);
 
         return ground;
-    }
-
-    public void handleInput(Scene scene, Player player, float deltaTime) {
-        Vector3 orientation = new Vector3();
-
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            orientation.z = -1;
-            direction = Direction.LEFT;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            orientation.z = 1;
-            direction = Direction.RIGHT;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            orientation.x = 1;
-            direction = Direction.UP;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            orientation.x = -1;
-            direction = Direction.DOWN;
-        }
-
-        var translation = orientation.nor().scl(PLAYER_MOVE);
-        var translationX = new Vector3(translation.x, 0, 0);
-        var translationZ = new Vector3(0, 0, translation.z);
-
-        // Collision detection
-        player.position.add(translationX);
-        var checkForCollision = scene.testAABBCollisions(player);
-        if (!checkForCollision.isEmpty()) {
-            player.position.sub(translationX);
-        }
-
-        player.position.add(translationZ);
-        checkForCollision = scene.testAABBCollisions(player);
-        if (!checkForCollision.isEmpty()) {
-            player.position.sub(translationZ);
-        }
-
-        var ground = getGroundMaterial(scene);
-        for (var tile : ground) {
-            if (tile instanceof MowableTile mowable) {
-                mowable.mow();
-            }
-        }
-
-        Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
-        particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
-
-    }
-
-    private static Texture createTexture() {
-        return new Texture("shaun-mower-sheet.png");
     }
 
     // Getter for the texture
