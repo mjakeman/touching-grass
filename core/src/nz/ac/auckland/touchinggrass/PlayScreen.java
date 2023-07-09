@@ -29,9 +29,8 @@ public class PlayScreen extends ScreenAdapter {
     MapRenderer mapRenderer;
 
     Player player;
-    Entity entity;
 
-    float unitScale = 1/32f;
+    private Level currentLevel;
 
     private float stateTime = 0;
     private Scene scene;
@@ -52,30 +51,10 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         super.show();
 
+        // Setup UI
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
 
         float h = Gdx.graphics.getHeight();
-
-        batch = new SpriteBatch();
-        img = new Texture("badlogic.jpg");
-
-        scene = new Scene();
-
-        player = new Player();
-        player.position = new Vector3(9, 2, 6);
-        scene.addObject(player);
-
-        npcEntity = new NPCEntity(() -> new Texture("old-mower-sheet.png"));
-        npcEntity.position = new Vector3(21, 2, 7);
-        npcEntity.direction = Direction.DOWN;
-        scene.addObject(npcEntity);
-
-        tiledMap = new TmxMapLoader().load("story-intro.tmx");
-        mapRenderer = new MapRenderer(tiledMap);
-
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.zoom = 0.35f;
-        camera.update();
 
         TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
         ImageButton.ImageButtonStyle backStyle = new ImageButton.ImageButtonStyle();
@@ -96,10 +75,15 @@ public class PlayScreen extends ScreenAdapter {
         stage.addActor(backButton);
         Gdx.input.setInputProcessor(stage);
 
-        shapeRenderer = new ShapeRenderer();
-        particleSystem = new ParticleSystem();
 
-        mapRenderer.constructGround(scene);
+        // Setup Level
+        currentLevel = new IntroLevel();
+
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom = 0.35f;
+        camera.update();
+
+        scene = currentLevel.setup();
     }
 
     @Override
@@ -114,15 +98,13 @@ public class PlayScreen extends ScreenAdapter {
         batch.setProjectionMatrix(camera.combined);
 
         scene.update(delta);
+        currentLevel.update(camera.combined, delta, stateTime);
+        scene.draw(camera.combined, stateTime);
 
         followCamera(delta);
         camera.update();
 
-//        tiledMapRenderer.setView(camera);
-//        tiledMapRenderer.render();
-
         handleCameraInput();
-        player.handleInput(scene, player, delta);
 
         boolean hovering = backButton.isOver();
 
@@ -132,18 +114,8 @@ public class PlayScreen extends ScreenAdapter {
             Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         }
 
-        batch.begin();
-//        mapRenderer.drawGround(batch);
-        batch.end();
         healthBar.render();
-        // player.draw(camera.combined, stateTime);
-        scene.draw(camera.combined, stateTime);
-
         stage.draw();
-
-        // drawDebugLine();
-
-
     }
 
     private void drawDebugLine() {
@@ -171,7 +143,7 @@ public class PlayScreen extends ScreenAdapter {
     }
 
     public void followCamera(float deltaTime) {
-        Vector2 desiredPosition = IsometricUtils.isoToScreen(player.getCentre());
+        Vector2 desiredPosition = IsometricUtils.isoToScreen(currentLevel.getPlayer().getCentre());
 
         float lerp = 0.2f;
         Vector3 position = camera.position;
@@ -207,6 +179,12 @@ public class PlayScreen extends ScreenAdapter {
 //        }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 //            player.position.x -= PLAYER_MOVE;
 //        }
+    }
+
+    private void loadLevel(Level level) {
+        currentLevel.teardown();
+        scene = level.setup();
+        currentLevel = level;
     }
 
     public void pause(int milliseconds) {
