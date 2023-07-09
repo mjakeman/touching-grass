@@ -2,6 +2,7 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -34,10 +35,14 @@ public class Player extends Entity{
     private final ShapeRenderer shapeRenderer;
     private final ParticleSystem particleSystem;
 
+    private Sound soundEffect;
+
     public Player() {
         super(createTexture());
 
         nonBatchable = true;
+
+        soundEffect = Gdx.audio.newSound(Gdx.files.internal("../assets/lawnmower.ogg"));
 
         // super(new Texture(Gdx.files.internal("grass.png")));
         Texture spriteSheet = getTexture();
@@ -213,6 +218,12 @@ public class Player extends Entity{
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             orientation.x = -1;
             direction = Direction.DOWN;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            soundEffect.play(0.1f);
+        } else {
+            soundEffect.stop();
         }
 
         var translation = orientation.nor().scl(PLAYER_MOVE);
