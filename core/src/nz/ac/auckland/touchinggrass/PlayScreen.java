@@ -56,9 +56,9 @@ public class PlayScreen extends ScreenAdapter {
         img = new Texture("badlogic.jpg");
 
         player = new Player();
-        player.position = new Vector3(0, 2, 0);
+        player.position = new Vector3(9, 2, 6);
 
-        tiledMap = new TmxMapLoader().load("test-map.tmx");
+        tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
