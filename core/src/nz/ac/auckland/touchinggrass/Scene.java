@@ -1,6 +1,7 @@
 package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -13,13 +14,21 @@ public class Scene {
     List<SceneObject> objects;
     SpriteBatch batch;
 
+    OrthographicCamera camera;
+
     public Scene() {
         objects = new ArrayList<>();
         batch = new SpriteBatch();
+        camera = new OrthographicCamera();
     }
 
     public void addObject(SceneObject sceneObject) {
         objects.add(sceneObject);
+    }
+
+    public void removeObject(SceneObject sceneObject) {
+        objects.remove(sceneObject);
+        // TODO: Updatables, once rebased
     }
 
     public void draw(Matrix4 projectionMatrix, float stateTime) {
@@ -76,6 +85,10 @@ public class Scene {
         }
 
         return list;
+    }
+
+    public Camera getCamera() {
+        return this.camera;
     }
 
 }

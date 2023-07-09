@@ -3,7 +3,9 @@ package nz.ac.auckland.touchinggrass;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -121,6 +123,25 @@ public class Player extends Entity{
         return ground;
     }
 
+    private boolean handleCollision(Scene scene, List<SceneObject> objects) {
+        for (var object : objects) {
+            if (object instanceof FlagTile flag) {
+                scene.removeObject(flag);
+//                OrthographicCamera camera = Scene.getCamera();
+//                camera.zoom(-2);
+                return true;
+            }
+            if (object instanceof MushroomTile mushroom) {
+                scene.removeObject(mushroom);
+//                OrthographicCamera camera = getCamera();
+//                camera.zoom(-2);
+                return true;
+            }
+        }
+
+        return objects.isEmpty();
+    }
+
     public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
@@ -201,13 +222,13 @@ public class Player extends Entity{
         // Collision detection
         player.position.add(translationX);
         var checkForCollision = scene.testAABBCollisions(player);
-        if (!checkForCollision.isEmpty()) {
+        if (!handleCollision(scene, checkForCollision)) {
             player.position.sub(translationX);
         }
 
         player.position.add(translationZ);
         checkForCollision = scene.testAABBCollisions(player);
-        if (!checkForCollision.isEmpty()) {
+        if (!handleCollision(scene, checkForCollision)) {
             player.position.sub(translationZ);
         }
 
