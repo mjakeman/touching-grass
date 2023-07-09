@@ -61,7 +61,7 @@ public class PlayScreen extends ScreenAdapter {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        player.position = new Vector3(9, 2, 6);
+        player.position = new Vector3(9, 1, 6);
 
         tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);

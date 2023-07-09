@@ -136,23 +136,44 @@ public class Player extends Entity{
             if (axisLeft > 0.2) {
                 horizontalMovement.x = 1;
                 horizontalMovement.z = 1;
-                direction = Direction.UP;
             } else if (axisLeft < -0.2) {
                 horizontalMovement.x = -1;
                 horizontalMovement.z = -1;
-                direction = Direction.DOWN;
             }
 
             var axisRight = controller.getAxis(controller.getMapping().axisLeftY);
             if (axisRight > 0.2) {
                 verticalMovement.z = 1;
                 verticalMovement.x = -1;
-                direction = Direction.RIGHT;
             } else if (axisRight < -0.2) {
                 verticalMovement.z = -1;
                 verticalMovement.x = 1;
-                direction = Direction.LEFT;
             }
+
+            if (axisLeft > 0 && axisRight > 0) {
+                direction = Direction.RIGHT;
+            } else if (axisLeft < 0 && axisRight < 0) {
+                direction = Direction.LEFT;
+            } else if (axisLeft > 0 && axisRight < 0) {
+                direction = Direction.UP;
+            } else if (axisLeft < 0 && axisRight > 0) {
+                direction = Direction.DOWN;
+            }
+
+
+            // Axis proximity determination
+//            if (Math.abs(axisLeft) > Math.abs(axisRight) && axisLeft > 0 && axisRight < 0) {
+//                direction = Direction.UP;
+//            } else if (Math.abs(axisRight) > Math.abs(axisLeft) && axisLeft > 0 && axisRight > 0) {
+//                direction = Direction.LEFT;
+//            } else if (Math.abs(axisLeft) > Math.abs(axisRight) && axisLeft < 0 && axisRight < 0) {
+//                direction = Direction.DOWN;
+//            } else if (Math.abs(axisRight) > Math.abs(axisLeft) && axisLeft < 0 && axisRight > 0) {
+//                direction = Direction.RIGHT;
+//            }
+
+            System.out.println(axisLeft);
+            System.out.println(axisRight);
 
             orientation = horizontalMovement.add(verticalMovement);
         }
