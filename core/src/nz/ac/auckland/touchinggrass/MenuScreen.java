@@ -49,10 +49,10 @@ public class MenuScreen extends ScreenAdapter {
         helpStyle.up = helpDrawable;
 
         playButton = new ImageButton(playStyle);
-        playButton.setBounds(28, 210, 186, 40);
+        playButton.setBounds(54, 320, 372, 80);
 
         helpButton = new ImageButton(helpStyle);
-        helpButton.setBounds(28, 165, 80, 40);
+        helpButton.setBounds(54, 230, 160, 80);
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -82,8 +82,8 @@ public class MenuScreen extends ScreenAdapter {
             viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
             // Adjust button positions based on the new viewport dimensions
-            playButton.setBounds(28, viewport.getWorldHeight() - 210, 186, 40);
-            helpButton.setBounds(28, viewport.getWorldHeight() - 165, 80, 40);
+            playButton.setBounds(54, viewport.getWorldHeight() - 320, 372, 80);
+            helpButton.setBounds(54, viewport.getWorldHeight() - 230, 160, 80);
         }
 
         boolean hovering = playButton.isOver() || helpButton.isOver();

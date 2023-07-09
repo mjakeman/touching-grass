@@ -43,7 +43,7 @@ public class HelpScreen extends ScreenAdapter {
         homeStyle.up = homeDrawable;
 
         homeButton = new ImageButton(homeStyle);
-        homeButton.setBounds(w/2 - 40, 115, 80, 40);
+        homeButton.setBounds(w/2 - 80, 165, 160, 80);
 
         homeButton.addListener(new ClickListener() {
             @Override
@@ -64,7 +64,7 @@ public class HelpScreen extends ScreenAdapter {
             viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
             // Adjust button positions based on the new viewport dimensions
-            homeButton.setBounds(viewport.getWorldWidth() / 2 - 40, viewport.getWorldHeight() - 115, 80, 40);
+            homeButton.setBounds(viewport.getWorldWidth() / 2 - 80, viewport.getWorldHeight() - 165, 160, 80);
         }
 
         boolean hovering = homeButton.isOver();
