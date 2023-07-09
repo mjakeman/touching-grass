@@ -21,35 +21,18 @@ public class IntroLevel extends Level {
     SpriteBatch batch;
     Texture img;
     TiledMap tiledMap;
-    OrthographicCamera camera;
     ShapeRenderer shapeRenderer;
     ParticleSystem particleSystem;
-    HealthBar healthBar;
     MapRenderer mapRenderer;
 
     Player player;
-
-    private Level currentLevel;
-
-    private float stateTime = 0;
     private Scene scene;
-
-    private Stage stage;
-    private ImageButton backButton;
     private NPCEntity npcEntity;
 
-    private Pixmap cursorPixmap;
 
     @Override
-    public Scene setup(OrthographicCamera camera) {
-        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
-
-        float h = Gdx.graphics.getHeight();
-
-        batch = new SpriteBatch();
-        img = new Texture("badlogic.jpg");
-
-        scene = new Scene(camera);
+    public Scene setup(PlayScreen screen) {
+        scene = new Scene(screen.camera);
 
         player = new Player();
         player.position = new Vector3(9, 2, 6);
@@ -61,36 +44,26 @@ public class IntroLevel extends Level {
         scene.addObject(npcEntity);
 
         var eventArea = new EventArea((obj) -> {
-            System.out.println("Enter!");
+
+            var sequencer = screen.sequencer;
+
+            sequencer.addAction(new Sequencer.Action(0, () -> sequencer.isBlocking = true));
+
+            sequencer.addAction(new Sequencer.Action(3, () -> sequencer.isBlocking = false));
+
+//            var messageDialog = new MessageDialog("cloud.png", 200, 100);
+//            messageDialog.setMessage("This is a helpful hint!");
+//            SpriteBatch batch = new SpriteBatch();
+//            batch.begin();
+//            messageDialog.render(batch);
+//            batch.end();
+//            messageDialog.dispose();
         });
         eventArea.position = new Vector3(21, 2, 7);
         scene.addObject(eventArea);
 
         tiledMap = new TmxMapLoader().load("story-intro.tmx");
         mapRenderer = new MapRenderer(tiledMap);
-
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.zoom = 0.35f;
-        camera.update();
-
-        TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
-        ImageButton.ImageButtonStyle backStyle = new ImageButton.ImageButtonStyle();
-        backStyle.up = backDrawable;
-
-        backButton = new ImageButton(backStyle);
-        backButton.setBounds(10, h - 50, 100, 40); // Adjust the position and size of the button here
-
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                MenuScreen menuScreen = new MenuScreen();
-                ((Game) Gdx.app.getApplicationListener()).setScreen(menuScreen);
-            }
-        });
-
-        stage = new Stage();
-        stage.addActor(backButton);
-        Gdx.input.setInputProcessor(stage);
 
         shapeRenderer = new ShapeRenderer();
         particleSystem = new ParticleSystem();

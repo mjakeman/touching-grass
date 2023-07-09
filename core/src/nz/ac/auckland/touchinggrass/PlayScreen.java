@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import java.sql.SQLData;
 import java.util.function.Supplier;
 
 public class PlayScreen extends ScreenAdapter {
@@ -40,6 +41,7 @@ public class PlayScreen extends ScreenAdapter {
     private NPCEntity npcEntity;
 
     private Pixmap cursorPixmap;
+    public Sequencer sequencer;
 
     PlayScreen(SpriteBatch batch)
     {
@@ -82,7 +84,9 @@ public class PlayScreen extends ScreenAdapter {
         camera.zoom = 0.35f;
         camera.update();
 
-        scene = currentLevel.setup(camera);
+        scene = currentLevel.setup(this);
+
+        sequencer = new Sequencer();
     }
 
     @Override
@@ -96,14 +100,16 @@ public class PlayScreen extends ScreenAdapter {
 
         batch.setProjectionMatrix(camera.combined);
 
-        scene.update(delta);
-        currentLevel.update(camera.combined, delta, stateTime);
         scene.draw(camera.combined, stateTime);
 
         followCamera(delta);
         camera.update();
 
-        handleCameraInput();
+        if (sequencer.step(delta))
+            return;
+
+        currentLevel.update(camera.combined, delta, stateTime);
+        scene.update(delta);
 
         boolean hovering = backButton.isOver();
 
@@ -115,6 +121,8 @@ public class PlayScreen extends ScreenAdapter {
 
         healthBar.render();
         stage.draw();
+
+        handleCameraInput();
     }
 
     private void drawDebugLine() {
@@ -182,7 +190,7 @@ public class PlayScreen extends ScreenAdapter {
 
     private void loadLevel(Level level) {
         currentLevel.teardown();
-        scene = level.setup(camera);
+        scene = level.setup(this);
         currentLevel = level;
     }
 
