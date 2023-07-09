@@ -57,7 +57,7 @@ public class IntroLevel extends Level {
         scene = new Scene(camera);
 
         player = new Player();
-        player.position = new Vector3(9, 2, 6);
+        player.position = new Vector3(9, 1, 6);
         scene.addObject(player);
 
         npcEntity = new NPCEntity(() -> new Texture("old-mower-sheet.png"));
@@ -71,7 +71,7 @@ public class IntroLevel extends Level {
         eventArea.position = new Vector3(21, 2, 7);
         scene.addObject(eventArea);
 
-        tiledMap = new TmxMapLoader().load("story-intro.tmx");
+        tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

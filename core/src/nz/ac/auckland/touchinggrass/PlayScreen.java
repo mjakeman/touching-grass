@@ -194,12 +194,5 @@ public class PlayScreen extends ScreenAdapter {
         currentLevel = level;
     }
 
-    public void pause(int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            // This block is executed if the sleep operation is interrupted.
-            e.printStackTrace();
-        }
-    }
+
 }

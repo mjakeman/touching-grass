@@ -25,6 +25,15 @@ public class Sequencer extends Thread {
         actionQueue.add(POISON_PILL);
     }
 
+    public void pause(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            // This block is executed if the sleep operation is interrupted.
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void run() {
         while (true) {
