@@ -54,17 +54,34 @@ public class IntroLevel extends Level {
             sequencer.addAction(new Sequencer2.Transition(1, screen.camera.zoom, 0.15f, (s, e, p) -> {
                 screen.camera.zoom = MathUtils.lerp(s, e, p);
             }));
-            sequencer.addAction(new Sequencer2.Action(1, () -> {
-                System.out.println("Setting message dialog");
-                screen.messageDialog = new MessageDialog("cloud.png", 200, 100);
+            sequencer.addAction(new Sequencer2.Action(0, () -> {
+                screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
                 screen.messageDialog.setMessage("Bryan the NPC: Hello there young mower!");
             }));
-            sequencer.addAction(new Sequencer2.Action(2, () -> { System.out.println("waiting"); }));
+            sequencer.addAction(new Sequencer2.Action(2, () -> {
+                screen.messageDialog.dispose();
+                screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
+                screen.messageDialog.setMessage("Bryan the NPC: You have been asleep for 50 years");
+            }));
+            sequencer.addAction(new Sequencer2.Action(2, () -> {
+                screen.messageDialog.dispose();
+                screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
+                screen.messageDialog.setMessage("Bryan the NPC: There is grass everywhere!");
+            }));
+            sequencer.addAction(new Sequencer2.Action(2, () -> {
+                screen.messageDialog.dispose();
+                screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
+                screen.messageDialog.setMessage("Bryan the NPC: Set forth and mow all the grass");
+            }));
+            sequencer.addAction(new Sequencer2.Action(2, () -> {
+                screen.messageDialog.dispose();
+                screen.messageDialog = null;
+            }));
 
             sequencer.addAction(new Sequencer2.Transition(1, 0.15f, originalZoom, (s, e, p) -> {
                 screen.camera.zoom = MathUtils.lerp(s, e, p);
+                sequencer.isBlocking = false;
             }));
-            sequencer.addAction(new Sequencer2.Action(3, () -> sequencer.isBlocking = false));
 
 //            var messageDialog = new MessageDialog("cloud.png", 200, 100);
 //            messageDialog.setMessage("This is a helpful hint!");

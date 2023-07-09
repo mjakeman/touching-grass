@@ -27,7 +27,7 @@ public class PlayScreen extends ScreenAdapter {
     OrthographicCamera camera;
     ShapeRenderer shapeRenderer;
     ParticleSystem particleSystem;
-    HealthBar healthBar;
+//    HealthBar healthBar;
     MapRenderer mapRenderer;
 
     Player player;
@@ -51,7 +51,7 @@ public class PlayScreen extends ScreenAdapter {
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
-        healthBar = new HealthBar(batch, 100);
+//        healthBar = new HealthBar(batch, 100);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class PlayScreen extends ScreenAdapter {
         camera.update();
 
         if (messageDialog != null) {
-            System.out.println("Drawing message box");
+//            System.out.println("Drawing message box");
             batch.begin();
             messageDialog.render(batch);
             batch.end();
@@ -136,7 +136,7 @@ public class PlayScreen extends ScreenAdapter {
             Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         }
 
-        healthBar.render();
+//        healthBar.render();
         stage.draw();
 
         handleCameraInput();
@@ -157,7 +157,7 @@ public class PlayScreen extends ScreenAdapter {
         super.dispose();
         batch.dispose();
         img.dispose();
-        healthBar.dispose();
+//        healthBar.dispose();
     }
 
     @Override

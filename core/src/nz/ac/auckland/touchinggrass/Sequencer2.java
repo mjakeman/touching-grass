@@ -10,7 +10,6 @@ public class Sequencer2 {
     }
 
     static class Action extends BaseAction {
-        float delay;
         Runnable action;
 
         public Action(float delay, Runnable action) {
@@ -69,15 +68,18 @@ public class Sequencer2 {
         if (action == null) return isBlocking;
 
         frameTime += deltaTime;
+        System.out.println("Added " + deltaTime);
 
         if (frameTime < action.delay) {
-            System.out.println("Waiting");
             return isBlocking;
         }
+
+        System.out.println(frameTime);
 
         if (action instanceof Action realAction) {
             actionQueue.remove();
             realAction.action.run();
+            frameTime = 0;
         } else if (action instanceof Transition transition) {
             var progress = 1 - ((transition.delay - frameTime) / transition.delay);
 
@@ -87,9 +89,10 @@ public class Sequencer2 {
             }
 
             actionQueue.remove();
+            frameTime = 0;
         }
 
-        frameTime = 0;
+        System.out.println("Reset");
 
         return isBlocking;
     }
