@@ -5,7 +5,11 @@ import java.util.Queue;
 
 public class Sequencer {
 
-    static class Action {
+    static class BaseAction {
+        float delay;
+    }
+
+    static class Action extends BaseAction {
         float delay;
         Runnable action;
 
@@ -15,11 +19,29 @@ public class Sequencer {
         }
     }
 
+    interface TransitionCallback {
+        void callback(float start, float end, float progress);
+    }
+
+    static class Transition extends BaseAction {
+        float delay;
+        float start;
+        float end;
+        TransitionCallback callback;
+
+        public Transition(float delay, float start, float end, TransitionCallback callback) {
+            this.delay = delay;
+            this.callback = callback;
+            this.start = start;
+            this.end = end;
+        }
+    }
+
     private float frameTime = 0f;
     boolean isBlocking = false;
 
     // A queue of Runnable objects, each representing an action to be executed.
-    private final Queue<Action> actionQueue;
+    private final Queue<BaseAction> actionQueue;
 
     // A special "poison pill" action that signals the sequencer to stop.
     private final Action POISON_PILL = new Action(0, () -> {});
@@ -29,7 +51,7 @@ public class Sequencer {
     }
 
     // Add a new action to the queue.
-    public void addAction(Action action) {
+    public void addAction(BaseAction action) {
         actionQueue.add(action);
     }
 
@@ -42,21 +64,32 @@ public class Sequencer {
 
         // Take the next action from the queue and execute it.
         // If the queue is empty, this will block until an action is added.
-        Action action = actionQueue.peek();
-
-//        System.out.printf("Polling %b\n", action != null);
+        BaseAction action = actionQueue.peek();
 
         if (action == null) return isBlocking;
 
         frameTime += deltaTime;
 
-        if (frameTime < action.delay) return isBlocking;
+        if (frameTime < action.delay) {
+            System.out.println("Waiting");
+            return isBlocking;
+        }
 
-        action = actionQueue.remove();
-        action.action.run();
+        if (action instanceof Action realAction) {
+            actionQueue.remove();
+            realAction.action.run();
+        } else if (action instanceof Transition transition) {
+            var progress = 1 - ((transition.delay - frameTime) / transition.delay);
 
-        System.out.printf("Executed! frameTime=%f%n\n", frameTime);
-        frameTime -= action.delay;
+            if (progress <= 1) {
+                transition.callback.callback(transition.start, transition.end, progress);
+                return isBlocking;
+            }
+
+            actionQueue.remove();
+        }
+
+        frameTime = 0;
 
         return isBlocking;
     }

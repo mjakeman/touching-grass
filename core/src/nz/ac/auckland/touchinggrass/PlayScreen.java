@@ -43,6 +43,8 @@ public class PlayScreen extends ScreenAdapter {
     private Pixmap cursorPixmap;
     public Sequencer sequencer;
 
+    public MessageDialog messageDialog;
+
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
@@ -98,12 +100,19 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0f, 0.6f, 0.8f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.setProjectionMatrix(camera.combined);
+//        batch.setProjectionMatrix(camera.combined);
 
         scene.draw(camera.combined, stateTime);
 
         followCamera(delta);
         camera.update();
+
+        if (messageDialog != null) {
+            System.out.println("Drawing message box");
+            batch.begin();
+            messageDialog.render(batch);
+            batch.end();
+        }
 
         if (sequencer.step(delta))
             return;
