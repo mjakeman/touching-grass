@@ -16,10 +16,10 @@ public class Scene {
 
     OrthographicCamera camera;
 
-    public Scene() {
+    public Scene(OrthographicCamera camera) {
         objects = new ArrayList<>();
         batch = new SpriteBatch();
-        camera = new OrthographicCamera();
+        this.camera = camera;
     }
 
     public void addObject(SceneObject sceneObject) {
@@ -87,7 +87,7 @@ public class Scene {
         return list;
     }
 
-    public Camera getCamera() {
+    public OrthographicCamera getCamera() {
         return this.camera;
     }
 

@@ -92,7 +92,7 @@ public class PlayScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         particleSystem = new ParticleSystem();
 
-        scene = new Scene();
+        scene = new Scene(camera);
         scene.addObject(player);
 
         mapRenderer.constructGround(scene);

@@ -127,8 +127,8 @@ public class Player extends Entity{
         for (var object : objects) {
             if (object instanceof FlagTile flag) {
                 scene.removeObject(flag);
-//                OrthographicCamera camera = Scene.getCamera();
-//                camera.zoom(-2);
+                OrthographicCamera camera = scene.getCamera();
+                camera.zoom = -camera.zoom;
                 return true;
             }
             if (object instanceof MushroomTile mushroom) {
