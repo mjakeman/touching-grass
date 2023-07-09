@@ -56,4 +56,24 @@ public class Scene {
                 : -1;
     }
 
+    public SceneObject testAABBCollisions(SceneObject test) {
+        var bbox1 = test.getBoundingBox();
+        for (var object : objects) {
+            var bbox2 = object.getBoundingBox();
+            if (!object.doesCollision) continue;
+            if (object.position.y != test.position.y) continue;
+
+            if (bbox1.x < bbox2.x + bbox2.width &&
+                bbox1.x + bbox1.width > bbox2.x &&
+                bbox1.y < bbox2.y + bbox2.height &&
+                bbox1.y + bbox1.height > bbox2.y
+            ) {
+                // Collision detected!
+                return object;
+            }
+        }
+
+        return null;
+    }
+
 }

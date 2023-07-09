@@ -119,7 +119,7 @@ public class PlayScreen extends ScreenAdapter {
 //        tiledMapRenderer.render();
 
         handleCameraInput();
-        player.handleInput(player, delta);
+        player.handleInput(scene, player, delta);
 
         batch.begin();
 //        mapRenderer.drawGround(batch);

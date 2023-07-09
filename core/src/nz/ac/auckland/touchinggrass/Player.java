@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.stream.StreamSupport;
+
 public class Player extends Entity{
     private final Animation<TextureRegion> leftAnimation;
     private final Animation<TextureRegion> downAnimation;
@@ -99,7 +101,7 @@ public class Player extends Entity{
         particleSystem.update(shapeRenderer, stateTime);
     }
 
-    public void handleInput(Player player, float deltaTime) {
+    public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -119,7 +121,13 @@ public class Player extends Entity{
         }
 
         var translation = orientation.nor().scl(PLAYER_MOVE);
+
+        // Collision detection
         player.position.add(translation);
+        var checkForCollision = scene.testAABBCollisions(player);
+        if (checkForCollision != null) {
+            scene.objects.remove(checkForCollision);
+        }
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
         particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);

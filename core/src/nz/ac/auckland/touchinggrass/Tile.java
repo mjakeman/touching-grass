@@ -21,6 +21,8 @@ public class Tile extends SceneObject {
         this.opacity = opacity;
         this.tile = tile;
         this.position = new Vector3(row, layerY, col);
+
+        this.doesCollision = true;
     }
 
     @Override
