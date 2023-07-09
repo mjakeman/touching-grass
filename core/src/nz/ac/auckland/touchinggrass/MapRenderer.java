@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
@@ -96,6 +97,42 @@ public class MapRenderer {
 //                }else {
 
 //                }
+            }
+        }
+    }
+
+    private boolean isGrassTile(TiledMapTile tile) {
+        var tileId = tile.getId() - 1;
+        return tileId == 7 || tileId == 8 || tileId == 27 || tileId == 28;
+    }
+
+    public void constructGround(Scene scene) {
+        int layerIndex = 0;
+        for (var layer : tiledMap.getLayers()) {
+            if (layer instanceof TiledMapTileLayer) {
+                constructLayer(scene, (TiledMapTileLayer) layer, layerIndex++);
+            }
+        }
+    }
+
+    private void constructLayer(Scene scene, TiledMapTileLayer layer, int layerIndex) {
+        var dirtTile = tiledMap.getTileSets().getTile(89-1); // dirt
+
+        for (int row = layer.getWidth() - 1; row >= 0; row--) {
+            for (int col = 0; col <= layer.getWidth() - 1; col++) {
+                var cell = layer.getCell(col, row);
+                if (cell == null) continue;
+
+                var tile = cell.getTile();
+                if (tile == null) continue;
+
+                // THIS IS GRASS
+                if (isGrassTile(tile)) {
+                    scene.addObject(new MowableTile(tile, dirtTile, layer.getOpacity(), row, col, layerIndex));
+                    continue;
+                }
+
+                scene.addObject(new Tile(tile, layer.getOpacity(), row, col, layerIndex));
             }
         }
     }

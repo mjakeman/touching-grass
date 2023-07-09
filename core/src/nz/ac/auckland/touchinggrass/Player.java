@@ -14,6 +14,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.controllers.Controllers;
 
+import java.util.List;
+import java.util.stream.StreamSupport;
+
+import java.util.Objects;
+
 public class Player extends Entity{
     private final Animation<TextureRegion> leftAnimation;
     private final Animation<TextureRegion> downAnimation;
@@ -27,7 +32,7 @@ public class Player extends Entity{
     private final ShapeRenderer shapeRenderer;
     private final ParticleSystem particleSystem;
 
-    public Player() {
+    public Player() throws InterruptedException {
         super(createTexture());
 
         nonBatchable = true;
@@ -54,6 +59,12 @@ public class Player extends Entity{
         leftAnimation = new Animation<>(FRAME_DURATION, frames[6], frames[7]);
 
         direction = Direction.UP;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        var size = 0.7f;
+        return new BoundingBox(position.x + 0.15f, position.z + 0.15f, size, size);
     }
 
     public Vector3 getCentre() {
@@ -101,7 +112,16 @@ public class Player extends Entity{
         particleSystem.update(shapeRenderer, stateTime);
     }
 
-    public void handleInput(Player player, float deltaTime) {
+    private List<SceneObject> getGroundMaterial(Scene scene) {
+        var translation = new Vector3(1.0f, 1, -1.0f);
+        position.sub(translation);
+        var ground = scene.testAABBCollisions(this);
+        position.add(translation);
+
+        return ground;
+    }
+
+    public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
 //        System.out.println(Controllers.getControllers().size);
@@ -154,10 +174,32 @@ public class Player extends Entity{
         }
 
         var translation = orientation.nor().scl(PLAYER_MOVE);
-        player.position.add(translation);
+        var translationX = new Vector3(translation.x, 0, 0);
+        var translationZ = new Vector3(0, 0, translation.z);
+
+        // Collision detection
+        player.position.add(translationX);
+        var checkForCollision = scene.testAABBCollisions(player);
+        if (!checkForCollision.isEmpty()) {
+            player.position.sub(translationX);
+        }
+
+        player.position.add(translationZ);
+        checkForCollision = scene.testAABBCollisions(player);
+        if (!checkForCollision.isEmpty()) {
+            player.position.sub(translationZ);
+        }
+
+        var ground = getGroundMaterial(scene);
+        for (var tile : ground) {
+            if (tile instanceof MowableTile mowable) {
+                mowable.mow();
+            }
+        }
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
         particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
+
     }
 
     private static Texture createTexture() {
@@ -168,4 +210,5 @@ public class Player extends Entity{
     public Texture getTexture() {
         return texture;
     }
+
 }

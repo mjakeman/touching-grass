@@ -28,6 +28,7 @@ public class TouchingGrass extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		menuScreen = new MenuScreen();
+		Gdx.graphics.setWindowedMode(1280, 720);
 		setScreen(menuScreen);
 	}
 

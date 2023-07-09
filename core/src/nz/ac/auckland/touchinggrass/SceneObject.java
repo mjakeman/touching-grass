@@ -9,6 +9,11 @@ import java.util.List;
 public class SceneObject {
     public Vector3 position;
     protected boolean nonBatchable = false;
+    protected boolean doesCollision = false;
+
+    public BoundingBox getBoundingBox() {
+        return new BoundingBox(position.x, position.z, 1, 1);
+    }
 
     public void draw(Matrix4 projectionMatrix, float stateTime) {
 

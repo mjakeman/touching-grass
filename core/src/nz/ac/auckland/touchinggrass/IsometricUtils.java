@@ -13,7 +13,7 @@ public class IsometricUtils {
         int scaleZ = 8;  // Adjust this value for different scaling
 
         float screenX = scaleX * (ptIso.x + ptIso.z);
-        float screenY = scaleZ * (ptIso.x - ptIso.z) + (scaleY * ptIso.y);
+        float screenY = scaleZ * (ptIso.x - ptIso.z);// + (scaleY * ptIso.y);
 
         return new Vector2(screenX, screenY);
     }

@@ -1,9 +1,7 @@
 package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,7 +21,6 @@ public class PlayScreen extends ScreenAdapter {
     Texture img;
     TiledMap tiledMap;
     OrthographicCamera camera;
-    IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
     ParticleSystem particleSystem;
     HealthBar healthBar;
@@ -40,6 +37,8 @@ public class PlayScreen extends ScreenAdapter {
     private Stage stage;
     private ImageButton backButton;
 
+    private Pixmap cursorPixmap;
+
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
@@ -50,18 +49,25 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         super.show();
 
+        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
+
         float h = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
 
-        player = new Player();
-        player.position = new Vector3(0, 0, 0);
+        try {
+            player = new Player();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        player.position = new Vector3(9, 2, 6);
 
-        tiledMap = new TmxMapLoader().load("test-map.tmx");
+        tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom = 0.35f;
         camera.update();
 
         TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
@@ -84,19 +90,12 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         shapeRenderer = new ShapeRenderer();
-        isometricRenderer = new IsometricRenderer();
         particleSystem = new ParticleSystem();
 
         scene = new Scene();
         scene.addObject(player);
 
-        entity = new Entity(new Texture("grass.png"));
-        entity.position = new Vector3(0, 1, 0);
-        scene.addObject(entity);
-
-        entity = new Entity(new Texture("grass.png"));
-        entity.position = new Vector3(0, -1, 0);
-        scene.addObject(entity);
+        mapRenderer.constructGround(scene);
     }
 
     @Override
@@ -117,10 +116,18 @@ public class PlayScreen extends ScreenAdapter {
 //        tiledMapRenderer.render();
 
         handleCameraInput();
-        player.handleInput(player, delta);
+        player.handleInput(scene, player, delta);
+
+        boolean hovering = backButton.isOver();
+
+        if (hovering) {
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
+        } else {
+            Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
+        }
 
         batch.begin();
-        mapRenderer.drawGround(batch);
+//        mapRenderer.drawGround(batch);
         batch.end();
         healthBar.render();
         // player.draw(camera.combined, stateTime);
@@ -194,5 +201,14 @@ public class PlayScreen extends ScreenAdapter {
 //        }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 //            player.position.x -= PLAYER_MOVE;
 //        }
+    }
+
+    public void pause(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            // This block is executed if the sleep operation is interrupted.
+            e.printStackTrace();
+        }
     }
 }

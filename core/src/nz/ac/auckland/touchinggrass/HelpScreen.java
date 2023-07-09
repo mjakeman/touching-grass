@@ -3,10 +3,7 @@ package nz.ac.auckland.touchinggrass;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,22 +12,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class MenuScreen extends ScreenAdapter {
+public class HelpScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private Texture background;
     private Stage stage;
     private Pixmap cursorPixmap;
-    private ImageButton playButton;
-    private ImageButton helpButton;
+    private ImageButton homeButton;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 
     @Override
     public void show() {
+
+        float w = Gdx.graphics.getWidth();
+
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("../assets/menu.png"));
+        background = new Texture(Gdx.files.internal("../assets/helpmenu.png"));
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
 
         camera = new OrthographicCamera();
@@ -39,39 +37,23 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        TextureRegionDrawable playDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/play.png"))));
-        TextureRegionDrawable helpDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/help.png"))));
+        TextureRegionDrawable homeDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/home.png"))));
 
-        ImageButton.ImageButtonStyle playStyle = new ImageButton.ImageButtonStyle();
-        playStyle.up = playDrawable;
+        ImageButton.ImageButtonStyle homeStyle = new ImageButton.ImageButtonStyle();
+        homeStyle.up = homeDrawable;
 
-        ImageButton.ImageButtonStyle helpStyle = new ImageButton.ImageButtonStyle();
-        helpStyle.up = helpDrawable;
+        homeButton = new ImageButton(homeStyle);
+        homeButton.setBounds(w/2 - 80, 165, 160, 80);
 
-        playButton = new ImageButton(playStyle);
-        playButton.setBounds(54, 320, 372, 80);
-
-        helpButton = new ImageButton(helpStyle);
-        helpButton.setBounds(54, 230, 160, 80);
-
-        playButton.addListener(new ClickListener() {
+        homeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PlayScreen playScreen = new PlayScreen(batch);
-                ((Game) Gdx.app.getApplicationListener()).setScreen(playScreen);
+                MenuScreen menuScreen = new MenuScreen();
+                ((Game) Gdx.app.getApplicationListener()).setScreen(menuScreen);
             }
         });
 
-        helpButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                HelpScreen helpScreen = new HelpScreen();
-                ((Game) Gdx.app.getApplicationListener()).setScreen(helpScreen);
-            }
-        });
-
-        stage.addActor(playButton);
-        stage.addActor(helpButton);
+        stage.addActor(homeButton);
     }
 
     @Override
@@ -82,11 +64,10 @@ public class MenuScreen extends ScreenAdapter {
             viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
             // Adjust button positions based on the new viewport dimensions
-            playButton.setBounds(54, viewport.getWorldHeight() - 320, 372, 80);
-            helpButton.setBounds(54, viewport.getWorldHeight() - 230, 160, 80);
+            homeButton.setBounds(viewport.getWorldWidth() / 2 - 80, viewport.getWorldHeight() - 165, 160, 80);
         }
 
-        boolean hovering = playButton.isOver() || helpButton.isOver();
+        boolean hovering = homeButton.isOver();
 
         if (hovering) {
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
