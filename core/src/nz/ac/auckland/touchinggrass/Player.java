@@ -137,6 +137,10 @@ public class Player extends Entity{
 //                camera.zoom(-2);
                 return true;
             }
+            if (object instanceof EventArea eventArea) {
+                eventArea.onEnter.handle(eventArea);
+                return objects.size() == 1;
+            }
         }
 
         return objects.isEmpty();

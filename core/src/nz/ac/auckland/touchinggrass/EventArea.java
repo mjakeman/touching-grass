@@ -4,6 +4,8 @@ import jdk.jfr.Event;
 
 public class EventArea extends GameObject {
 
+    private boolean done = false;
+
     interface IEventAction {
         void handle(EventArea area);
     }
@@ -12,7 +14,11 @@ public class EventArea extends GameObject {
 
     public EventArea(IEventAction onEnter) {
         this.doesCollision = true;
-        this.onEnter = onEnter;
+        this.onEnter = (area) -> {
+            if (done) return;
+            done = true;
+            onEnter.handle(area);
+        };
     }
 
     @Override
