@@ -1,9 +1,7 @@
 package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -40,6 +38,8 @@ public class PlayScreen extends ScreenAdapter {
     private Stage stage;
     private ImageButton backButton;
 
+    private Pixmap cursorPixmap;
+
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
@@ -50,11 +50,12 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         super.show();
 
+        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
+
         float h = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-
 
         try {
             player = new Player();
@@ -125,6 +126,14 @@ public class PlayScreen extends ScreenAdapter {
 
         handleCameraInput();
         player.handleInput(scene, player, delta);
+
+        boolean hovering = backButton.isOver();
+
+        if (hovering) {
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
+        } else {
+            Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
+        }
 
         batch.begin();
 //        mapRenderer.drawGround(batch);
