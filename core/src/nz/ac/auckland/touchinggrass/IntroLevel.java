@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.sun.tools.javac.Main;
 
 public class IntroLevel extends Level {
 
@@ -36,7 +37,7 @@ public class IntroLevel extends Level {
         scene = new Scene(screen.camera);
 
         player = new Player();
-        player.position = new Vector3(9, 2, 6);
+        player.position = new Vector3(8, 2, 7);
         scene.addObject(player);
 
         npcEntity = new NPCEntity(() -> new Texture("old-mower-sheet.png"));
@@ -74,6 +75,12 @@ public class IntroLevel extends Level {
 //            messageDialog.dispose();
         });
         eventArea.position = new Vector3(21, 2, 7);
+        scene.addObject(eventArea);
+
+        eventArea = new EventArea((obj) -> {
+            screen.loadLevel(new MainLevel());
+        });
+        eventArea.position = new Vector3(4, 2, 7);
         scene.addObject(eventArea);
 
         tiledMap = new TmxMapLoader().load("story-intro.tmx");

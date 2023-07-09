@@ -197,7 +197,7 @@ public class PlayScreen extends ScreenAdapter {
 //        }
     }
 
-    private void loadLevel(Level level) {
+    void loadLevel(Level level) {
         currentLevel.teardown();
         scene = level.setup(this);
         currentLevel = level;
