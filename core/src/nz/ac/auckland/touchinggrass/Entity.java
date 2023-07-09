@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class Entity extends GameObject {
@@ -19,7 +20,7 @@ public class Entity extends GameObject {
         SpriteBatch batch = new SpriteBatch();
         batch.setProjectionMatrix(projectionMatrix);
 
-        var vec = IsometricUtils.isoToScreen(position);
+        Vector2 vec = IsometricUtils.isoToScreen(position);
         batch.draw(texture, vec.x, vec.y);
 
         batch.end();
@@ -27,7 +28,7 @@ public class Entity extends GameObject {
 
     @Override
     public void drawBatched(SpriteBatch batch, float stateTime) {
-        var vec = IsometricUtils.isoToScreen(position);
+        Vector2 vec = IsometricUtils.isoToScreen(position);
         batch.draw(texture, vec.x, vec.y);
     }
 }

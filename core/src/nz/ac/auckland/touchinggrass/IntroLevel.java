@@ -45,10 +45,10 @@ public class IntroLevel extends Level {
         npcEntity.direction = Direction.DOWN;
         scene.addObject(npcEntity);
 
-        var eventArea = new EventArea((obj) -> {
+        EventArea eventArea = new EventArea((obj) -> {
 
-            var sequencer = screen.sequencer;
-            var originalZoom = screen.camera.zoom;
+            Sequencer2 sequencer = screen.sequencer;
+            float originalZoom = screen.camera.zoom;
 
             sequencer.addAction(new Sequencer2.Action(0, () -> sequencer.isBlocking = true));
             sequencer.addAction(new Sequencer2.Transition(1, screen.camera.zoom, 0.15f, (s, e, p) -> {

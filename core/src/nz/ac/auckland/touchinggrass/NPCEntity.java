@@ -59,7 +59,7 @@ public class NPCEntity extends Entity {
 
     @Override
     public BoundingBox getBoundingBox() {
-        var size = 0.7f;
+        float size = 0.7f;
         return new BoundingBox(position.x + 0.15f, position.z + 0.15f, size, size);
     }
 
@@ -67,25 +67,32 @@ public class NPCEntity extends Entity {
         return new Vector3(position).add(0.5f, 0.5f, 0.5f);
     }
 
-    public Vector3 getExhaust() {
-        var centre = getCentre();
-        float offset = 0.5f;
-        return switch (direction) {
-            case LEFT -> centre.add(0, 0, offset);
-            case RIGHT -> centre.add(0, 0, -offset);
-            case UP -> centre.add(-offset, 0, 0);
-            case DOWN -> centre.add(offset, 0, 0);
-        };
-    }
+//    public Vector3 getExhaust() {
+//        Vector3 centre = getCentre();
+//        float offset = 0.5f;
+//        return switch (direction) {
+//            case LEFT -> centre.add(0, 0, offset);
+//            case RIGHT -> centre.add(0, 0, -offset);
+//            case UP -> centre.add(-offset, 0, 0);
+//            case DOWN -> centre.add(offset, 0, 0);
+//        };
+//    }
 
     private Animation<TextureRegion> getCurrentAnimation() {
-        return switch (direction) {
-            case UP -> upAnimation;
-            case DOWN -> downAnimation;
-            case LEFT -> leftAnimation;
-            case RIGHT -> rightAnimation;
-        };
+        switch (direction) {
+            case UP:
+                return upAnimation;
+            case DOWN:
+                return downAnimation;
+            case LEFT:
+                return leftAnimation;
+            case RIGHT:
+                return rightAnimation;
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + direction);
+        }
     }
+
 
     @Override
     public void update(float deltaTime) {
@@ -103,7 +110,7 @@ public class NPCEntity extends Entity {
         spriteBatch.setProjectionMatrix(projectionMatrix);
 
         spriteBatch.begin();
-        var vec = IsometricUtils.isoToScreen(position);
+        Vector2 vec = IsometricUtils.isoToScreen(position);
         TextureRegion currentFrame = getCurrentAnimation().getKeyFrame(stateTime, true);
         spriteBatch.draw(currentFrame, vec.x, vec.y);
         spriteBatch.end();
@@ -115,9 +122,9 @@ public class NPCEntity extends Entity {
     }
 
     private List<SceneObject> getGroundMaterial(Scene scene) {
-        var translation = new Vector3(1.0f, 1, -1.0f);
+        Vector3 translation = new Vector3(1.0f, 1, -1.0f);
         position.sub(translation);
-        var ground = scene.testAABBCollisions(this);
+        List<SceneObject> ground = scene.testAABBCollisions(this);
         position.add(translation);
 
         return ground;

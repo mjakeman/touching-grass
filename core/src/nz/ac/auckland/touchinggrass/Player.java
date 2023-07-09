@@ -73,7 +73,7 @@ public class Player extends Entity{
 
     @Override
     public BoundingBox getBoundingBox() {
-        var size = shouldEnlargeSprite ? 2.3f : 0.7f; ;
+        float size = shouldEnlargeSprite ? 2.3f : 0.7f; ;
         return new BoundingBox(position.x + 0.15f, position.z + 0.15f, size, size);
     }
 
@@ -82,23 +82,35 @@ public class Player extends Entity{
     }
 
     public Vector3 getExhaust() {
-        var centre = getCentre();
+        Vector3 centre = getCentre();
         float offset = 0.5f;
-        return switch (direction) {
-            case LEFT -> centre.add(0, 0, offset);
-            case RIGHT -> centre.add(0, 0, -offset);
-            case UP -> centre.add(-offset, 0, 0);
-            case DOWN -> centre.add(offset, 0, 0);
-        };
+        switch (direction) {
+            case LEFT:
+                return centre.add(0, 0, offset);
+            case RIGHT:
+                return centre.add(0, 0, -offset);
+            case UP:
+                return centre.add(-offset, 0, 0);
+            case DOWN:
+                return centre.add(offset, 0, 0);
+            default:
+                return centre;
+        }
     }
 
     private Animation<TextureRegion> getCurrentAnimation() {
-        return switch (direction) {
-            case UP -> upAnimation;
-            case DOWN -> downAnimation;
-            case LEFT -> leftAnimation;
-            case RIGHT -> rightAnimation;
-        };
+        switch (direction) {
+            case UP:
+                return upAnimation;
+            case DOWN:
+                return downAnimation;
+            case LEFT:
+                return leftAnimation;
+            case RIGHT:
+                return rightAnimation;
+            default:
+                return null; // return some default animation here
+        }
     }
 
     @Override
@@ -111,7 +123,7 @@ public class Player extends Entity{
         spriteBatch.setProjectionMatrix(projectionMatrix);
 
         spriteBatch.begin();
-        var vec = IsometricUtils.isoToScreen(position);
+        Vector2 vec = IsometricUtils.isoToScreen(position);
         TextureRegion currentFrame = getCurrentAnimation().getKeyFrame(stateTime, true);
 
         float scale = shouldEnlargeSprite ? 2.5f : 1.0f; // Scale factor is 2.5 if the sprite should be enlarged, otherwise 1.0
@@ -128,17 +140,18 @@ public class Player extends Entity{
     }
 
     private List<SceneObject> getGroundMaterial(Scene scene) {
-        var translation = new Vector3(1.0f, 1, -1.0f);
+        Vector3 translation = new Vector3(1.0f, 1, -1.0f);
         position.sub(translation);
-        var ground = scene.testAABBCollisions(this);
+        List<SceneObject> ground = scene.testAABBCollisions(this);
         position.add(translation);
 
         return ground;
     }
 
     private boolean handleCollision(Scene scene, List<SceneObject> objects) {
-        for (var object : objects) {
-            if (object instanceof FlagTile flag) {
+        for (SceneObject object : objects) {
+            if (object instanceof FlagTile) {
+                FlagTile flag = (FlagTile) object;
                 OrthographicCamera camera = scene.getCamera();
                 Sequencer sequencer = new Sequencer();
                 sequencer.start();
@@ -154,8 +167,8 @@ public class Player extends Entity{
                 sequencer.stopWhenDone();
                 scene.removeObject(flag);
                 return true;
-            }
-            else if (object instanceof MushroomTile mushroom) {
+            } else if (object instanceof MushroomTile) {
+                MushroomTile mushroom = (MushroomTile) object;
                 Sequencer sequencer = new Sequencer();
                 sequencer.start();
                 sequencer.addAction(() ->
@@ -172,7 +185,8 @@ public class Player extends Entity{
 
                 return true;
             }
-            if (object instanceof EventArea eventArea) {
+            if (object instanceof EventArea) {
+                EventArea eventArea = (EventArea) object;
                 eventArea.onEnter.handle(eventArea);
                 return objects.size() == 1;
             }
@@ -192,7 +206,7 @@ public class Player extends Entity{
             Vector3 horizontalMovement = new Vector3();
             Vector3 verticalMovement = new Vector3();
 
-            var axisLeft = controller.getAxis(controller.getMapping().axisLeftX);
+            float axisLeft = controller.getAxis(controller.getMapping().axisLeftX);
             if (axisLeft > 0.2) {
                 horizontalMovement.x = 1;
                 horizontalMovement.z = 1;
@@ -201,7 +215,7 @@ public class Player extends Entity{
                 horizontalMovement.z = -1;
             }
 
-            var axisRight = controller.getAxis(controller.getMapping().axisLeftY);
+            float axisRight = controller.getAxis(controller.getMapping().axisLeftY);
             if (axisRight > 0.2) {
                 verticalMovement.z = 1;
                 verticalMovement.x = -1;
@@ -260,13 +274,13 @@ public class Player extends Entity{
             soundEffect.stop();
         }
 
-        var translation = orientation.nor().scl(PLAYER_MOVE);
-        var translationX = new Vector3(translation.x, 0, 0);
-        var translationZ = new Vector3(0, 0, translation.z);
+        Vector3 translation = orientation.nor().scl(PLAYER_MOVE);
+        Vector3 translationX = new Vector3(translation.x, 0, 0);
+        Vector3 translationZ = new Vector3(0, 0, translation.z);
 
         // Collision detection
         player.position.add(translationX);
-        var checkForCollision = scene.testAABBCollisions(player);
+        List<SceneObject> checkForCollision = scene.testAABBCollisions(player);
         if (!handleCollision(scene, checkForCollision)) {
             player.position.sub(translationX);
         }
@@ -277,8 +291,8 @@ public class Player extends Entity{
             player.position.sub(translationZ);
         }
 
-        var ground = getGroundMaterial(scene);
-        for (var tile : ground) {
+        List<SceneObject> ground = getGroundMaterial(scene);
+        for (SceneObject tile : ground) {
             if (tile instanceof MowableTile mowable) {
                 mowable.mow();
             }

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -33,7 +35,7 @@ public class MapRenderer {
     }
 
     public void drawGround(SpriteBatch batch) {
-        for (var layer : tiledMap.getLayers()) {
+        for (MapLayer layer : tiledMap.getLayers()) {
             if (layer instanceof TiledMapTileLayer) {
                 drawLayer(batch, (TiledMapTileLayer) layer);
             }
@@ -48,10 +50,10 @@ public class MapRenderer {
             for(int col = 0; col <= layer.getWidth() - 1; col++) {
                 Vector2 coords = IsometricUtils.isoToScreen(new Vector3(row, 0, col));
 
-                var cell = layer.getCell(col, row);
+                TiledMapTileLayer.Cell cell = layer.getCell(col, row);
                 if (cell == null) continue;
 
-                var tile = cell.getTile();
+                TiledMapTile tile = cell.getTile();
                 if (tile == null) continue;
 
                 TextureRegion region = tile.getTextureRegion();
@@ -102,22 +104,22 @@ public class MapRenderer {
     }
 
     private boolean isGrassTile(TiledMapTile tile) {
-        var tileId = tile.getId() - 1;
+        int tileId = tile.getId() - 1;
         return tileId == 7 || tileId == 8 || tileId == 27 || tileId == 28;
     }
     private boolean isFlagTile(TiledMapTile tile) {
-        var tileId = tile.getId() - 1;
+        int tileId = tile.getId() - 1;
         return tileId == 127;
     }
 
     private boolean isMushroomTile(TiledMapTile tile) {
-        var tileId = tile.getId() - 1;
+        int tileId = tile.getId() - 1;
         return tileId == 128;
     }
 
     public void constructGround(Scene scene) {
         int layerIndex = 0;
-        for (var layer : tiledMap.getLayers()) {
+        for (MapLayer layer : tiledMap.getLayers()) {
             if (layer instanceof TiledMapTileLayer) {
                 constructLayer(scene, (TiledMapTileLayer) layer, layerIndex++);
             }
@@ -125,16 +127,16 @@ public class MapRenderer {
     }
 
     private void constructLayer(Scene scene, TiledMapTileLayer layer, int layerIndex) {
-        var dirtTile = tiledMap.getTileSets().getTile(89-1); // dirt
-        var flagTile = tiledMap.getTileSets().getTile(128-1); // flag
-        var mushroomTile = tiledMap.getTileSets().getTile(129-1); // mushroom
+        TiledMapTile dirtTile = tiledMap.getTileSets().getTile(89-1); // dirt
+        TiledMapTile flagTile = tiledMap.getTileSets().getTile(128-1); // flag
+        TiledMapTile mushroomTile = tiledMap.getTileSets().getTile(129-1); // mushroom
 
         for (int row = layer.getWidth() - 1; row >= 0; row--) {
             for (int col = 0; col <= layer.getWidth() - 1; col++) {
-                var cell = layer.getCell(col, row);
+                TiledMapTileLayer.Cell cell = layer.getCell(col, row);
                 if (cell == null) continue;
 
-                var tile = cell.getTile();
+                TiledMapTile tile = cell.getTile();
                 if (tile == null) continue;
 
                 // THIS IS GRASS

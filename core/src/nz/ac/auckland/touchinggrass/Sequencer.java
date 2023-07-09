@@ -9,7 +9,12 @@ public class Sequencer extends Thread {
     private final BlockingQueue<Runnable> actionQueue;
 
     // A special "poison pill" action that signals the sequencer to stop.
-    private final Runnable POISON_PILL = () -> {};
+    private final Runnable POISON_PILL = new Runnable() {
+        @Override
+        public void run() {
+            // do nothing
+        }
+    };
 
     public Sequencer() {
         this.actionQueue = new LinkedBlockingQueue<>();

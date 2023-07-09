@@ -76,12 +76,14 @@ public class Sequencer2 {
 
         System.out.println(frameTime);
 
-        if (action instanceof Action realAction) {
+        if (action instanceof Action) {
+            Action realAction = (Action) action;
             actionQueue.remove();
             realAction.action.run();
             frameTime = 0;
-        } else if (action instanceof Transition transition) {
-            var progress = 1 - ((transition.delay - frameTime) / transition.delay);
+        } else if (action instanceof Transition) {
+            Transition transition = (Transition) action;
+            float progress = 1 - ((transition.delay - frameTime) / transition.delay);
 
             if (progress <= 1) {
                 transition.callback.callback(transition.start, transition.end, progress);
