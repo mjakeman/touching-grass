@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -49,7 +50,11 @@ public class PlayScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
 
-        player = new Player();
+        try {
+            player = new Player();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         player.position = new Vector3(0, 4, 0);
 
         tiledMap = new TmxMapLoader().load("test-map.tmx");
@@ -61,6 +66,31 @@ public class PlayScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         isometricRenderer = new IsometricRenderer();
         particleSystem = new ParticleSystem();
+
+        introAnimation();
+
+    }
+
+    private void introAnimation() {
+        Sequencer sequencer = new Sequencer();
+        sequencer.start();
+
+        // Add some actions...
+        sequencer.addAction(() -> {
+            System.out.println("Lock Player");
+        });
+        sequencer.addAction(() -> {
+            System.out.println("Pause");
+            pause(2000);
+
+        });
+        // Add another action.
+        sequencer.addAction(() -> {
+            System.out.println("Unlock player");
+        });
+
+        // Signal the sequencer to stop after all actions are executed.
+        sequencer.stopWhenDone();
     }
 
     @Override
@@ -153,5 +183,14 @@ public class PlayScreen extends ScreenAdapter {
 //        }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 //            player.position.x -= PLAYER_MOVE;
 //        }
+    }
+
+    public void pause(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            // This block is executed if the sleep operation is interrupted.
+            e.printStackTrace();
+        }
     }
 }

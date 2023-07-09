@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.Objects;
+
 public class Player extends Entity{
     private final Animation<TextureRegion> leftAnimation;
     private final Animation<TextureRegion> downAnimation;
@@ -25,7 +27,7 @@ public class Player extends Entity{
     private final ShapeRenderer shapeRenderer;
     private final ParticleSystem particleSystem;
 
-    public Player() {
+    public Player() throws InterruptedException {
         super(createTexture());
 
         // super(new Texture(Gdx.files.internal("grass.png")));
@@ -120,6 +122,7 @@ public class Player extends Entity{
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
         particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
+
     }
 
     private static Texture createTexture() {
@@ -130,4 +133,5 @@ public class Player extends Entity{
     public Texture getTexture() {
         return texture;
     }
+
 }
