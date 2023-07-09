@@ -3,6 +3,7 @@ package nz.ac.auckland.touchinggrass;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,11 +22,14 @@ public class HelpScreen extends ScreenAdapter {
     private ImageButton homeButton;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
+    private Sound click;
 
     @Override
     public void show() {
 
         float w = Gdx.graphics.getWidth();
+
+        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
 
         batch = new SpriteBatch();
         background = new Texture(Gdx.files.internal("../assets/helpmenu.png"));
@@ -48,6 +52,9 @@ public class HelpScreen extends ScreenAdapter {
         homeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                click.play();
+
                 MenuScreen menuScreen = new MenuScreen();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(menuScreen);
             }

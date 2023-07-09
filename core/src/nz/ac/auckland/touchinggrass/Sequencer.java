@@ -1,57 +1,22 @@
 package nz.ac.auckland.touchinggrass;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-public class Sequencer {
-
-    static class BaseAction {
-        float delay;
-    }
-
-    static class Action extends BaseAction {
-        float delay;
-        Runnable action;
-
-        public Action(float delay, Runnable action) {
-            this.delay = delay;
-            this.action = action;
-        }
-    }
-
-    interface TransitionCallback {
-        void callback(float start, float end, float progress);
-    }
-
-    static class Transition extends BaseAction {
-        float delay;
-        float start;
-        float end;
-        TransitionCallback callback;
-
-        public Transition(float delay, float start, float end, TransitionCallback callback) {
-            this.delay = delay;
-            this.callback = callback;
-            this.start = start;
-            this.end = end;
-        }
-    }
-
-    private float frameTime = 0f;
-    boolean isBlocking = false;
+public class Sequencer extends Thread {
 
     // A queue of Runnable objects, each representing an action to be executed.
-    private final Queue<BaseAction> actionQueue;
+    private final BlockingQueue<Runnable> actionQueue;
 
     // A special "poison pill" action that signals the sequencer to stop.
-    private final Action POISON_PILL = new Action(0, () -> {});
+    private final Runnable POISON_PILL = () -> {};
 
     public Sequencer() {
-        this.actionQueue = new LinkedList<>();
+        this.actionQueue = new LinkedBlockingQueue<>();
     }
 
     // Add a new action to the queue.
-    public void addAction(BaseAction action) {
+    public void addAction(Runnable action) {
         actionQueue.add(action);
     }
 
@@ -60,37 +25,31 @@ public class Sequencer {
         actionQueue.add(POISON_PILL);
     }
 
-    public boolean step(float deltaTime) {
-
-        // Take the next action from the queue and execute it.
-        // If the queue is empty, this will block until an action is added.
-        BaseAction action = actionQueue.peek();
-
-        if (action == null) return isBlocking;
-
-        frameTime += deltaTime;
-
-        if (frameTime < action.delay) {
-            System.out.println("Waiting");
-            return isBlocking;
+    public void pause(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            // This block is executed if the sleep operation is interrupted.
+            e.printStackTrace();
         }
+    }
 
-        if (action instanceof Action realAction) {
-            actionQueue.remove();
-            realAction.action.run();
-        } else if (action instanceof Transition transition) {
-            var progress = 1 - ((transition.delay - frameTime) / transition.delay);
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                // Take the next action from the queue and execute it.
+                // If the queue is empty, this will block until an action is added.
+                Runnable action = actionQueue.take();
 
-            if (progress <= 1) {
-                transition.callback.callback(transition.start, transition.end, progress);
-                return isBlocking;
+                // If the action is the poison pill, exit the loop.
+                if (action == POISON_PILL) break;
+
+                action.run();
+            } catch (InterruptedException e) {
+                // If the thread was interrupted, exit the loop.
+                break;
             }
-
-            actionQueue.remove();
         }
-
-        frameTime = 0;
-
-        return isBlocking;
     }
 }

@@ -2,6 +2,7 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -21,6 +22,8 @@ import java.util.stream.StreamSupport;
 
 import java.util.Objects;
 
+import static nz.ac.auckland.touchinggrass.Score.incrementScore;
+
 public class Player extends Entity{
     private final Animation<TextureRegion> leftAnimation;
     private final Animation<TextureRegion> downAnimation;
@@ -33,11 +36,16 @@ public class Player extends Entity{
     private final SpriteBatch spriteBatch;
     private final ShapeRenderer shapeRenderer;
     private final ParticleSystem particleSystem;
+    private boolean shouldEnlargeSprite;
+
+    private Sound soundEffect;
 
     public Player() {
         super(createTexture());
 
         nonBatchable = true;
+
+        soundEffect = Gdx.audio.newSound(Gdx.files.internal("../assets/lawnmower.ogg"));
 
         // super(new Texture(Gdx.files.internal("grass.png")));
         Texture spriteSheet = getTexture();
@@ -65,7 +73,7 @@ public class Player extends Entity{
 
     @Override
     public BoundingBox getBoundingBox() {
-        var size = 0.7f;
+        var size = shouldEnlargeSprite ? 2.3f : 0.7f; ;
         return new BoundingBox(position.x + 0.15f, position.z + 0.15f, size, size);
     }
 
@@ -105,7 +113,12 @@ public class Player extends Entity{
         spriteBatch.begin();
         var vec = IsometricUtils.isoToScreen(position);
         TextureRegion currentFrame = getCurrentAnimation().getKeyFrame(stateTime, true);
-        spriteBatch.draw(currentFrame, vec.x, vec.y);
+
+        float scale = shouldEnlargeSprite ? 2.5f : 1.0f; // Scale factor is 2.5 if the sprite should be enlarged, otherwise 1.0
+        float width = currentFrame.getRegionWidth() * scale; // Calculate new width
+        float height = currentFrame.getRegionHeight() * scale; // Calculate new height
+
+        spriteBatch.draw(currentFrame, vec.x, vec.y, width, height);
         spriteBatch.end();
     }
 
@@ -126,15 +139,37 @@ public class Player extends Entity{
     private boolean handleCollision(Scene scene, List<SceneObject> objects) {
         for (var object : objects) {
             if (object instanceof FlagTile flag) {
-                scene.removeObject(flag);
                 OrthographicCamera camera = scene.getCamera();
-                camera.zoom = -camera.zoom;
+                Sequencer sequencer = new Sequencer();
+                sequencer.start();
+                sequencer.addAction(() ->
+                        camera.zoom = -camera.zoom
+                );
+                sequencer.addAction(() ->
+                        sequencer.pause(15000)
+                );
+                sequencer.addAction(() ->
+                        camera.zoom = -camera.zoom
+                );
+                sequencer.stopWhenDone();
+                scene.removeObject(flag);
                 return true;
             }
-            if (object instanceof MushroomTile mushroom) {
+            else if (object instanceof MushroomTile mushroom) {
+                Sequencer sequencer = new Sequencer();
+                sequencer.start();
+                sequencer.addAction(() ->
+                        setToggleEnlargeSprite(true)
+                );
+                sequencer.addAction(() ->
+                        sequencer.pause(20000)
+                );
+                sequencer.addAction(() ->
+                        setToggleEnlargeSprite(false)
+                );
+                sequencer.stopWhenDone();
                 scene.removeObject(mushroom);
-//                OrthographicCamera camera = getCamera();
-//                camera.zoom(-2);
+
                 return true;
             }
             if (object instanceof EventArea eventArea) {
@@ -219,6 +254,12 @@ public class Player extends Entity{
             direction = Direction.DOWN;
         }
 
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            soundEffect.play(0.1f);
+        } else {
+            soundEffect.stop();
+        }
+
         var translation = orientation.nor().scl(PLAYER_MOVE);
         var translationX = new Vector3(translation.x, 0, 0);
         var translationZ = new Vector3(0, 0, translation.z);
@@ -244,7 +285,7 @@ public class Player extends Entity{
         }
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
-        particleSystem.emit((int)(100 * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x, screenPlayerCentre.y);
+        particleSystem.emit((int)((shouldEnlargeSprite ? 1000 : 100) * deltaTime), new Color(43f/256, 115f/256, 30f/256, 1.0f), screenPlayerCentre.x + (shouldEnlargeSprite ? 12.0f : 0.0f), screenPlayerCentre.y + (shouldEnlargeSprite ? 12.0f : 0.0f));
 
     }
 
@@ -257,4 +298,7 @@ public class Player extends Entity{
         return texture;
     }
 
+    public void setToggleEnlargeSprite(boolean shouldEnlargeSprite) {
+        this.shouldEnlargeSprite = shouldEnlargeSprite;
+    }
 }

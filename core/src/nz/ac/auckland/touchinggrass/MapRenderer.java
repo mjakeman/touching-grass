@@ -126,6 +126,8 @@ public class MapRenderer {
 
     private void constructLayer(Scene scene, TiledMapTileLayer layer, int layerIndex) {
         var dirtTile = tiledMap.getTileSets().getTile(89-1); // dirt
+        var flagTile = tiledMap.getTileSets().getTile(128-1); // flag
+        var mushroomTile = tiledMap.getTileSets().getTile(129-1); // mushroom
 
         for (int row = layer.getWidth() - 1; row >= 0; row--) {
             for (int col = 0; col <= layer.getWidth() - 1; col++) {
@@ -142,12 +144,12 @@ public class MapRenderer {
                 }
 
                 if (isFlagTile(tile)) {
-                    scene.addObject(new FlagTile(tile, dirtTile, layer.getOpacity(), row, col, layerIndex));
+                    scene.addObject(new FlagTile(tile, flagTile, layer.getOpacity(), row, col, layerIndex));
                     continue;
                 }
 
                 if (isMushroomTile(tile)) {
-                    scene.addObject(new FlagTile(tile, dirtTile, layer.getOpacity(), row, col, layerIndex));
+                    scene.addObject(new MushroomTile(tile, mushroomTile, layer.getOpacity(), row, col, layerIndex));
                     continue;
                 }
 
