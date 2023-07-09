@@ -57,7 +57,8 @@ public class Scene {
                 : -1;
     }
 
-    public SceneObject testAABBCollisions(SceneObject test) {
+    public List<SceneObject> testAABBCollisions(SceneObject test) {
+        var list = new ArrayList<SceneObject>();
         var bbox1 = test.getBoundingBox();
         for (var object : objects) {
             var bbox2 = object.getBoundingBox();
@@ -70,11 +71,11 @@ public class Scene {
                 bbox1.y + bbox1.height > bbox2.y
             ) {
                 // Collision detected!
-                return object;
+                list.add(object);
             }
         }
 
-        return null;
+        return list;
     }
 
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class Player extends Entity{
@@ -101,8 +102,8 @@ public class Player extends Entity{
         particleSystem.update(shapeRenderer, stateTime);
     }
 
-    private SceneObject getGroundMaterial(Scene scene) {
-        var translation = new Vector3(0, 1, 0);
+    private List<SceneObject> getGroundMaterial(Scene scene) {
+        var translation = new Vector3(0, 1, -0.5f);
         position.sub(translation);
         var ground = scene.testAABBCollisions(this);
         position.add(translation);
@@ -134,13 +135,15 @@ public class Player extends Entity{
         // Collision detection
         player.position.add(translation);
         var checkForCollision = scene.testAABBCollisions(player);
-        if (checkForCollision != null) {
-            scene.objects.remove(checkForCollision);
+        if (!checkForCollision.isEmpty()) {
+            scene.objects.removeAll(checkForCollision);
         }
 
         var ground = getGroundMaterial(scene);
-        if (ground instanceof MowableTile mowable) {
-            mowable.mow();
+        for (var tile : ground) {
+            if (tile instanceof MowableTile mowable) {
+                mowable.mow();
+            }
         }
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());
