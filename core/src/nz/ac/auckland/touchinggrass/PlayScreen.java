@@ -63,7 +63,7 @@ public class PlayScreen extends ScreenAdapter {
         }
         player.position = new Vector3(9, 2, 6);
 
-        tiledMap = new TmxMapLoader().load("story-intro.tmx");
+        tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
