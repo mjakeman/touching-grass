@@ -75,7 +75,6 @@ public class PlayScreen extends ScreenAdapter {
         stage.addActor(backButton);
         Gdx.input.setInputProcessor(stage);
 
-
         // Setup Level
         currentLevel = new IntroLevel();
 
@@ -83,7 +82,7 @@ public class PlayScreen extends ScreenAdapter {
         camera.zoom = 0.35f;
         camera.update();
 
-        scene = currentLevel.setup();
+        scene = currentLevel.setup(camera);
     }
 
     @Override
@@ -183,7 +182,7 @@ public class PlayScreen extends ScreenAdapter {
 
     private void loadLevel(Level level) {
         currentLevel.teardown();
-        scene = level.setup();
+        scene = level.setup(camera);
         currentLevel = level;
     }
 

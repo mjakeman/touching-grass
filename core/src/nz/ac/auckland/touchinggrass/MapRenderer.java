@@ -105,6 +105,15 @@ public class MapRenderer {
         var tileId = tile.getId() - 1;
         return tileId == 7 || tileId == 8 || tileId == 27 || tileId == 28;
     }
+    private boolean isFlagTile(TiledMapTile tile) {
+        var tileId = tile.getId() - 1;
+        return tileId == 127;
+    }
+
+    private boolean isMushroomTile(TiledMapTile tile) {
+        var tileId = tile.getId() - 1;
+        return tileId == 128;
+    }
 
     public void constructGround(Scene scene) {
         int layerIndex = 0;
@@ -129,6 +138,16 @@ public class MapRenderer {
                 // THIS IS GRASS
                 if (isGrassTile(tile)) {
                     scene.addObject(new MowableTile(tile, dirtTile, layer.getOpacity(), row, col, layerIndex));
+                    continue;
+                }
+
+                if (isFlagTile(tile)) {
+                    scene.addObject(new FlagTile(tile, dirtTile, layer.getOpacity(), row, col, layerIndex));
+                    continue;
+                }
+
+                if (isMushroomTile(tile)) {
+                    scene.addObject(new FlagTile(tile, dirtTile, layer.getOpacity(), row, col, layerIndex));
                     continue;
                 }
 

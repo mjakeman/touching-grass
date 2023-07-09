@@ -41,7 +41,7 @@ public class IntroLevel extends Level {
     private Pixmap cursorPixmap;
 
     @Override
-    public Scene setup() {
+    public Scene setup(OrthographicCamera camera) {
         cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
 
         float h = Gdx.graphics.getHeight();
@@ -49,7 +49,7 @@ public class IntroLevel extends Level {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
 
-        scene = new Scene();
+        scene = new Scene(camera);
 
         player = new Player();
         player.position = new Vector3(9, 2, 6);

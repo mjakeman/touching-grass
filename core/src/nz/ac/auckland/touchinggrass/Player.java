@@ -2,7 +2,10 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.controllers.Controllers;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -119,8 +123,81 @@ public class Player extends Entity{
         return ground;
     }
 
+    private boolean handleCollision(Scene scene, List<SceneObject> objects) {
+        for (var object : objects) {
+            if (object instanceof FlagTile flag) {
+                scene.removeObject(flag);
+                OrthographicCamera camera = scene.getCamera();
+                camera.zoom = -camera.zoom;
+                return true;
+            }
+            if (object instanceof MushroomTile mushroom) {
+                scene.removeObject(mushroom);
+//                OrthographicCamera camera = getCamera();
+//                camera.zoom(-2);
+                return true;
+            }
+        }
+
+        return objects.isEmpty();
+    }
+
     public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
+
+//        System.out.println(Controllers.getControllers().size);
+
+        if (Controllers.getControllers().size > 0) {
+            Controller controller = Controllers.getControllers().first();
+
+            Vector3 horizontalMovement = new Vector3();
+            Vector3 verticalMovement = new Vector3();
+
+            var axisLeft = controller.getAxis(controller.getMapping().axisLeftX);
+            if (axisLeft > 0.2) {
+                horizontalMovement.x = 1;
+                horizontalMovement.z = 1;
+            } else if (axisLeft < -0.2) {
+                horizontalMovement.x = -1;
+                horizontalMovement.z = -1;
+            }
+
+            var axisRight = controller.getAxis(controller.getMapping().axisLeftY);
+            if (axisRight > 0.2) {
+                verticalMovement.z = 1;
+                verticalMovement.x = -1;
+            } else if (axisRight < -0.2) {
+                verticalMovement.z = -1;
+                verticalMovement.x = 1;
+            }
+
+            if (axisLeft > 0 && axisRight > 0) {
+                direction = Direction.RIGHT;
+            } else if (axisLeft < 0 && axisRight < 0) {
+                direction = Direction.LEFT;
+            } else if (axisLeft > 0 && axisRight < 0) {
+                direction = Direction.UP;
+            } else if (axisLeft < 0 && axisRight > 0) {
+                direction = Direction.DOWN;
+            }
+
+
+            // Axis proximity determination
+//            if (Math.abs(axisLeft) > Math.abs(axisRight) && axisLeft > 0 && axisRight < 0) {
+//                direction = Direction.UP;
+//            } else if (Math.abs(axisRight) > Math.abs(axisLeft) && axisLeft > 0 && axisRight > 0) {
+//                direction = Direction.LEFT;
+//            } else if (Math.abs(axisLeft) > Math.abs(axisRight) && axisLeft < 0 && axisRight < 0) {
+//                direction = Direction.DOWN;
+//            } else if (Math.abs(axisRight) > Math.abs(axisLeft) && axisLeft < 0 && axisRight > 0) {
+//                direction = Direction.RIGHT;
+//            }
+
+            System.out.println(axisLeft);
+            System.out.println(axisRight);
+
+            orientation = horizontalMovement.add(verticalMovement);
+        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             orientation.z = -1;
@@ -145,13 +222,13 @@ public class Player extends Entity{
         // Collision detection
         player.position.add(translationX);
         var checkForCollision = scene.testAABBCollisions(player);
-        if (!checkForCollision.isEmpty()) {
+        if (!handleCollision(scene, checkForCollision)) {
             player.position.sub(translationX);
         }
 
         player.position.add(translationZ);
         checkForCollision = scene.testAABBCollisions(player);
-        if (!checkForCollision.isEmpty()) {
+        if (!handleCollision(scene, checkForCollision)) {
             player.position.sub(translationZ);
         }
 
