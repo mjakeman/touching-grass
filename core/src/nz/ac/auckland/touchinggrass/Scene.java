@@ -41,7 +41,7 @@ public class Scene {
     }
 
     private float nearness(SceneObject object) {
-        return object.position.x + object.position.y + object.position.z;
+        return -0.5f*object.position.x + object.position.z;
     }
 
     private int closer(SceneObject a, SceneObject b) {

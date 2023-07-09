@@ -56,7 +56,7 @@ public class PlayScreen extends ScreenAdapter {
         img = new Texture("badlogic.jpg");
 
         player = new Player();
-        player.position = new Vector3(0, 0, 0);
+        player.position = new Vector3(0, 2, 0);
 
         tiledMap = new TmxMapLoader().load("test-map.tmx");
         mapRenderer = new MapRenderer(tiledMap);
@@ -97,6 +97,8 @@ public class PlayScreen extends ScreenAdapter {
         entity = new Entity(new Texture("grass.png"));
         entity.position = new Vector3(0, -1, 0);
         scene.addObject(entity);
+
+        mapRenderer.constructGround(scene);
     }
 
     @Override
@@ -120,7 +122,7 @@ public class PlayScreen extends ScreenAdapter {
         player.handleInput(player, delta);
 
         batch.begin();
-        mapRenderer.drawGround(batch);
+//        mapRenderer.drawGround(batch);
         batch.end();
         healthBar.render();
         // player.draw(camera.combined, stateTime);

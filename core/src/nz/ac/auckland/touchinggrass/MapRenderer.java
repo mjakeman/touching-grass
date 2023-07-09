@@ -99,4 +99,30 @@ public class MapRenderer {
             }
         }
     }
+
+    public void constructGround(Scene scene) {
+        int layerIndex = 0;
+        for (var layer : tiledMap.getLayers()) {
+            if (layer instanceof TiledMapTileLayer) {
+                constructLayer(scene, (TiledMapTileLayer) layer, layerIndex++);
+            }
+        }
+    }
+
+    private void constructLayer(Scene scene, TiledMapTileLayer layer, int layerIndex) {
+        if (layerIndex>2) return;
+        System.out.println("Constructing layer " + layerIndex);
+        for(int row = layer.getWidth() - 1; row >= 0; row--) {
+            for(int col = 0; col <= layer.getWidth() - 1; col++) {
+                var cell = layer.getCell(col, row);
+                if (cell == null) continue;
+
+                var tile = cell.getTile();
+                if (tile == null) continue;
+
+                scene.addObject(new Tile(tile, layer.getOpacity(), row, col, layerIndex));
+            }
+        }
+        System.out.println("Done " + layerIndex);
+    }
 }
