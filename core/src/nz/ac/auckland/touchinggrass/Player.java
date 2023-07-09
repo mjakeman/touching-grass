@@ -101,6 +101,15 @@ public class Player extends Entity{
         particleSystem.update(shapeRenderer, stateTime);
     }
 
+    private SceneObject getGroundMaterial(Scene scene) {
+        var translation = new Vector3(0, 1, 0);
+        position.sub(translation);
+        var ground = scene.testAABBCollisions(this);
+        position.add(translation);
+
+        return ground;
+    }
+
     public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
@@ -127,6 +136,11 @@ public class Player extends Entity{
         var checkForCollision = scene.testAABBCollisions(player);
         if (checkForCollision != null) {
             scene.objects.remove(checkForCollision);
+        }
+
+        var ground = getGroundMaterial(scene);
+        if (ground instanceof MowableTile mowable) {
+            mowable.mow();
         }
 
         Vector2 screenPlayerCentre = IsometricUtils.isoToScreen(player.getCentre());

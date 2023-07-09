@@ -15,7 +15,7 @@ public class Tile extends SceneObject {
 
     private static final int NUM_VERTICES = 20;
     final float opacity;
-    final TiledMapTile tile;
+    protected TiledMapTile tile;
 
     public Tile(TiledMapTile tile, float opacity, int row, int col, int layerY) {
         this.opacity = opacity;
