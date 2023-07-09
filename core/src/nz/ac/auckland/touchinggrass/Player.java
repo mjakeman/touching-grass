@@ -2,6 +2,7 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.controllers.Controllers;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -121,6 +123,39 @@ public class Player extends Entity{
 
     public void handleInput(Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
+
+//        System.out.println(Controllers.getControllers().size);
+
+        if (Controllers.getControllers().size > 0) {
+            Controller controller = Controllers.getControllers().first();
+
+            Vector3 horizontalMovement = new Vector3();
+            Vector3 verticalMovement = new Vector3();
+
+            var axisLeft = controller.getAxis(controller.getMapping().axisLeftX);
+            if (axisLeft > 0.2) {
+                horizontalMovement.x = 1;
+                horizontalMovement.z = 1;
+                direction = Direction.UP;
+            } else if (axisLeft < -0.2) {
+                horizontalMovement.x = -1;
+                horizontalMovement.z = -1;
+                direction = Direction.DOWN;
+            }
+
+            var axisRight = controller.getAxis(controller.getMapping().axisLeftY);
+            if (axisRight > 0.2) {
+                verticalMovement.z = 1;
+                verticalMovement.x = -1;
+                direction = Direction.RIGHT;
+            } else if (axisRight < -0.2) {
+                verticalMovement.z = -1;
+                verticalMovement.x = 1;
+                direction = Direction.LEFT;
+            }
+
+            orientation = horizontalMovement.add(verticalMovement);
+        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             orientation.z = -1;
