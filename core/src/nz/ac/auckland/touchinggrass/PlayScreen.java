@@ -94,14 +94,6 @@ public class PlayScreen extends ScreenAdapter {
         scene = new Scene();
         scene.addObject(player);
 
-        entity = new Entity(new Texture("grass.png"));
-        entity.position = new Vector3(0, 1, 0);
-        scene.addObject(entity);
-
-        entity = new Entity(new Texture("grass.png"));
-        entity.position = new Vector3(0, -1, 0);
-        scene.addObject(entity);
-
         mapRenderer.constructGround(scene);
     }
 
