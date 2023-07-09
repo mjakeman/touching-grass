@@ -18,6 +18,7 @@ buildscript {
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: "java-library"
 
     version = '1.0'
     ext {
@@ -27,7 +28,8 @@ allprojects {
         box2DLightsVersion = '1.5'
         ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
-        gdxControllersVersion = '2.2.1'
+        gdxControllersVersion = '2.2.3'
+        jamepadVersion = '2.0.14.1'
     }
 
     repositories {
@@ -39,6 +41,14 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
     }
+
+    dependencies {
+        constraints {
+            implementation("com.badlogicgames.jamepad:jamepad:$jamepadVersion") {
+                because("Default jamepad version 2.0.14.1 is missing macOS arm64 binaries.")
+            }
+        }
+    }
 }
 
 project(":desktop") {
@@ -49,6 +59,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
         
     }
 }
@@ -65,6 +76,8 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion:sources"
+        implementation "com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion:sources"
         
     }
 }
@@ -75,6 +88,7 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
         
     }
 }
