@@ -21,7 +21,6 @@ public class PlayScreen extends ScreenAdapter {
     Texture img;
     TiledMap tiledMap;
     OrthographicCamera camera;
-    IsometricRenderer isometricRenderer;
     ShapeRenderer shapeRenderer;
     ParticleSystem particleSystem;
     HealthBar healthBar;
@@ -64,10 +63,11 @@ public class PlayScreen extends ScreenAdapter {
         }
         player.position = new Vector3(9, 2, 6);
 
-        tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
+        tiledMap = new TmxMapLoader().load("story-intro.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom = 0.35f;
         camera.update();
 
         TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
@@ -90,19 +90,10 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         shapeRenderer = new ShapeRenderer();
-        isometricRenderer = new IsometricRenderer();
         particleSystem = new ParticleSystem();
 
         scene = new Scene();
         scene.addObject(player);
-
-        entity = new Entity(new Texture("grass.png"));
-        entity.position = new Vector3(0, 1, 0);
-        scene.addObject(entity);
-
-        entity = new Entity(new Texture("grass.png"));
-        entity.position = new Vector3(0, -1, 0);
-        scene.addObject(entity);
 
         mapRenderer.constructGround(scene);
     }

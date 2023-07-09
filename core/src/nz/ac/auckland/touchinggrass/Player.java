@@ -59,6 +59,12 @@ public class Player extends Entity{
         direction = Direction.UP;
     }
 
+    @Override
+    public BoundingBox getBoundingBox() {
+        var size = 0.7f;
+        return new BoundingBox(position.x + 0.15f, position.z + 0.15f, size, size);
+    }
+
     public Vector3 getCentre() {
         return new Vector3(position).add(0.5f, 0.5f, 0.5f);
     }
@@ -133,12 +139,20 @@ public class Player extends Entity{
         }
 
         var translation = orientation.nor().scl(PLAYER_MOVE);
+        var translationX = new Vector3(translation.x, 0, 0);
+        var translationZ = new Vector3(0, 0, translation.z);
 
         // Collision detection
-        player.position.add(translation);
+        player.position.add(translationX);
         var checkForCollision = scene.testAABBCollisions(player);
         if (!checkForCollision.isEmpty()) {
-            scene.objects.removeAll(checkForCollision);
+            player.position.sub(translationX);
+        }
+
+        player.position.add(translationZ);
+        checkForCollision = scene.testAABBCollisions(player);
+        if (!checkForCollision.isEmpty()) {
+            player.position.sub(translationZ);
         }
 
         var ground = getGroundMaterial(scene);
