@@ -117,9 +117,7 @@ public class PlayScreen extends ScreenAdapter {
 
         if (messageDialog != null) {
 //            System.out.println("Drawing message box");
-            batch.begin();
-            messageDialog.render(batch);
-            batch.end();
+            messageDialog.render();
         }
 
         if (sequencer.step(delta))
