@@ -22,6 +22,8 @@ import java.util.stream.StreamSupport;
 
 import java.util.Objects;
 
+import static nz.ac.auckland.touchinggrass.Score.incrementScore;
+
 public class Player extends Entity{
     private final Animation<TextureRegion> leftAnimation;
     private final Animation<TextureRegion> downAnimation;
