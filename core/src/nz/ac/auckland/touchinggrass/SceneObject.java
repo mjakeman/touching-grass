@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 
 public class SceneObject {
-    public Vector3 position;
+    public Vector3 position = new Vector3();
     protected boolean nonBatchable = false;
     protected boolean doesCollision = false;
 

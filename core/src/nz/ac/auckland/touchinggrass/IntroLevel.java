@@ -60,6 +60,12 @@ public class IntroLevel extends Level {
         npcEntity.direction = Direction.DOWN;
         scene.addObject(npcEntity);
 
+        var eventArea = new EventArea((obj) -> {
+            System.out.println("Enter!");
+        });
+        eventArea.position = new Vector3(21, 2, 7);
+        scene.addObject(eventArea);
+
         tiledMap = new TmxMapLoader().load("story-intro.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
