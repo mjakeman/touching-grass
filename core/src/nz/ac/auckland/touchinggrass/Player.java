@@ -111,7 +111,7 @@ public class Player extends Entity{
     }
 
     private List<SceneObject> getGroundMaterial(Scene scene) {
-        var translation = new Vector3(0, 1, -0.5f);
+        var translation = new Vector3(1.0f, 1, -1.0f);
         position.sub(translation);
         var ground = scene.testAABBCollisions(this);
         position.add(translation);
