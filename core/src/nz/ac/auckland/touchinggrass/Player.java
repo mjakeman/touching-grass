@@ -34,6 +34,7 @@ public class Player extends Entity{
     private boolean shouldEnlargeSprite;
 
     private Sound soundEffect;
+    private float soundEffectDebounce = 3f;
 
     public Player() {
         super(createTexture());
@@ -273,8 +274,12 @@ public class Player extends Entity{
             direction = Direction.DOWN;
         }
 
+        soundEffectDebounce += deltaTime;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            soundEffect.play(0.1f);
+            if (soundEffectDebounce > 3) {
+                soundEffect.play(0.1f);
+                soundEffectDebounce = 0;
+            }
         } else {
             soundEffect.stop();
         }
