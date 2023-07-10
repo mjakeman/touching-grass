@@ -153,34 +153,30 @@ public class Player extends Entity{
             if (object instanceof FlagTile) {
                 FlagTile flag = (FlagTile) object;
                 OrthographicCamera camera = scene.getCamera();
-                Sequencer sequencer = new Sequencer();
-                sequencer.start();
-                sequencer.addAction(() ->
+                Sequencer2 sequencer = new Sequencer2();
+                sequencer.addAction(new Sequencer2.Action(0, () ->
                         camera.zoom = -camera.zoom
-                );
-                sequencer.addAction(() ->
-                        sequencer.pause(5000)
-                );
-                sequencer.addAction(() ->
+                ));
+                sequencer.addAction(new Sequencer2.Action(5, () -> {
+                    System.out.println("Australia Flag duration over");
+                }));
+                sequencer.addAction(new Sequencer2.Action(0, () ->
                         camera.zoom = -camera.zoom
-                );
-                sequencer.stopWhenDone();
+                ));
                 scene.removeObject(flag);
                 return true;
             } else if (object instanceof MushroomTile) {
                 MushroomTile mushroom = (MushroomTile) object;
-                Sequencer sequencer = new Sequencer();
-                sequencer.start();
-                sequencer.addAction(() ->
+                Sequencer2 sequencer = new Sequencer2();
+                sequencer.addAction(new Sequencer2.Action(0, () ->
                         setToggleEnlargeSprite(true)
-                );
-                sequencer.addAction(() ->
-                        sequencer.pause(10000)
-                );
-                sequencer.addAction(() ->
+                ));
+                sequencer.addAction(new Sequencer2.Action(10, () -> {
+                    System.out.println("Mushroom duration over");
+                }));
+                sequencer.addAction(new Sequencer2.Action(0, () ->
                         setToggleEnlargeSprite(false)
-                );
-                sequencer.stopWhenDone();
+                ));
                 scene.removeObject(mushroom);
 
                 return true;
@@ -305,7 +301,8 @@ public class Player extends Entity{
 
         List<SceneObject> ground = getGroundMaterial(scene);
         for (SceneObject tile : ground) {
-            if (tile instanceof MowableTile mowable) {
+            if (tile instanceof MowableTile) {
+                MowableTile mowable = (MowableTile) tile;
                 mowable.mow();
             }
         }

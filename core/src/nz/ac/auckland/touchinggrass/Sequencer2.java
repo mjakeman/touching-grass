@@ -68,13 +68,12 @@ public class Sequencer2 {
         if (action == null) return isBlocking;
 
         frameTime += deltaTime;
-        System.out.println("Added " + deltaTime);
 
         if (frameTime < action.delay) {
             return isBlocking;
         }
 
-        System.out.println(frameTime);
+//        System.out.println(frameTime);
 
         if (action instanceof Action) {
             Action realAction = (Action) action;
@@ -93,8 +92,6 @@ public class Sequencer2 {
             actionQueue.remove();
             frameTime = 0;
         }
-
-        System.out.println("Reset");
 
         return isBlocking;
     }
