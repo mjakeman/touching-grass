@@ -29,7 +29,7 @@ public class Player extends Entity{
     private final Animation<TextureRegion> downAnimation;
     private final Animation<TextureRegion> rightAnimation;
     private final Animation<TextureRegion> upAnimation;
-    private static final float PLAYER_MOVE = 0.05f;
+    private static float PLAYER_MOVE = 0.05f;
     final float FRAME_DURATION = 0.1f; // time between frames
     private static final int FRAME_SIZE = 32;
     private Direction direction;
@@ -215,6 +215,12 @@ public class Player extends Entity{
                 horizontalMovement.z = -1;
             }
 
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || controller.getButton(controller.getMapping().buttonA)) {
+                PLAYER_MOVE = 0.2f;
+            } else {
+                PLAYER_MOVE = 0.05f;
+            }
+
             float axisRight = controller.getAxis(controller.getMapping().axisLeftY);
             if (axisRight > 0.2) {
                 verticalMovement.z = 1;
@@ -246,10 +252,16 @@ public class Player extends Entity{
 //                direction = Direction.RIGHT;
 //            }
 
-            System.out.println(axisLeft);
-            System.out.println(axisRight);
+//            System.out.println(axisLeft);
+//            System.out.println(axisRight);
 
             orientation = horizontalMovement.add(verticalMovement);
+        } else {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                PLAYER_MOVE = 0.2f;
+            } else {
+                PLAYER_MOVE = 0.05f;
+            }
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
