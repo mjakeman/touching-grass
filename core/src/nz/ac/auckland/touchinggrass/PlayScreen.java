@@ -69,6 +69,8 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         super.show();
 
+        TouchingGrass.startBackgroundMusic();
+
         click = Gdx.audio.newSound(Gdx.files.internal("click.ogg"));
 
         // Setup UI

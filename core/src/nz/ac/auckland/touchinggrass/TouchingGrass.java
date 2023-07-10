@@ -9,7 +9,7 @@ public class TouchingGrass extends Game {
 
 	private SpriteBatch batch;
 	private MenuScreen menuScreen;
-	private Music backgroundMusic;
+	private static Music backgroundMusic;
 
 	@Override
 	public void create() {
@@ -21,6 +21,9 @@ public class TouchingGrass extends Game {
 		// Load and play the background music
 		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("m.ogg"));
 		backgroundMusic.setLooping(true);
+	}
+
+	public static void startBackgroundMusic() {
 		backgroundMusic.play();
 	}
 
