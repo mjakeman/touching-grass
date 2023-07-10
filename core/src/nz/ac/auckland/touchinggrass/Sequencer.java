@@ -3,7 +3,7 @@ package nz.ac.auckland.touchinggrass;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Sequencer2 {
+public class Sequencer {
 
     static class BaseAction {
         float delay;
@@ -45,7 +45,7 @@ public class Sequencer2 {
     // A special "poison pill" action that signals the sequencer to stop.
     private final Action POISON_PILL = new Action(0, () -> {});
 
-    public Sequencer2() {
+    public Sequencer() {
         this.actionQueue = new LinkedList<>();
     }
 

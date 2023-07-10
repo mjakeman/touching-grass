@@ -1,22 +1,13 @@
 package nz.ac.auckland.touchinggrass;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.sun.tools.javac.Main;
 
 public class IntroLevel extends Level {
 
@@ -47,43 +38,43 @@ public class IntroLevel extends Level {
 
         EventArea eventArea = new EventArea((obj) -> {
 
-            Sequencer2 sequencer = screen.sequencer;
+            Sequencer sequencer = screen.sequencer;
             float originalZoom = screen.camera.zoom;
 
-            sequencer.addAction(new Sequencer2.Action(0, () -> sequencer.isBlocking = true));
-            sequencer.addAction(new Sequencer2.Transition(1, screen.camera.zoom, 0.15f, (s, e, p) -> {
+            sequencer.addAction(new Sequencer.Action(0, () -> sequencer.isBlocking = true));
+            sequencer.addAction(new Sequencer.Transition(1, screen.camera.zoom, 0.15f, (s, e, p) -> {
                 screen.camera.zoom = MathUtils.lerp(s, e, p);
             }));
-            sequencer.addAction(new Sequencer2.Action(0, () -> {
+            sequencer.addAction(new Sequencer.Action(0, () -> {
                 screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
                 screen.messageDialog.setMessage("Bryan the NPC: Hello there young mower!");
             }));
-            sequencer.addAction(new Sequencer2.Action(2, () -> {
+            sequencer.addAction(new Sequencer.Action(2, () -> {
                 screen.messageDialog.dispose();
                 screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
                 screen.messageDialog.setMessage("Bryan the NPC: You have been asleep for 50 years");
             }));
-            sequencer.addAction(new Sequencer2.Action(2, () -> {
+            sequencer.addAction(new Sequencer.Action(2, () -> {
                 screen.messageDialog.dispose();
                 screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
                 screen.messageDialog.setMessage("Bryan the NPC: There is grass everywhere!");
             }));
-            sequencer.addAction(new Sequencer2.Action(2, () -> {
+            sequencer.addAction(new Sequencer.Action(2, () -> {
                 screen.messageDialog.dispose();
                 screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
                 screen.messageDialog.setMessage("Bryan the NPC: Set forth and mow all the grass");
             }));
-            sequencer.addAction(new Sequencer2.Action(2, () -> {
+            sequencer.addAction(new Sequencer.Action(2, () -> {
                 screen.messageDialog.dispose();
                 screen.messageDialog = new MessageDialog("cloud.png", 500, 200);
                 screen.messageDialog.setMessage("Bryan the NPC: Go through that portal to continue");
             }));
-            sequencer.addAction(new Sequencer2.Action(2, () -> {
+            sequencer.addAction(new Sequencer.Action(2, () -> {
                 screen.messageDialog.dispose();
                 screen.messageDialog = null;
             }));
 
-            sequencer.addAction(new Sequencer2.Transition(1, 0.15f, originalZoom, (s, e, p) -> {
+            sequencer.addAction(new Sequencer.Transition(1, 0.15f, originalZoom, (s, e, p) -> {
                 screen.camera.zoom = MathUtils.lerp(s, e, p);
                 sequencer.isBlocking = false;
             }));

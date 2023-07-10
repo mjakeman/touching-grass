@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,9 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-
-import java.sql.SQLData;
-import java.util.function.Supplier;
 
 public class PlayScreen extends ScreenAdapter {
 
@@ -42,7 +38,7 @@ public class PlayScreen extends ScreenAdapter {
     private NPCEntity npcEntity;
 
     private Pixmap cursorPixmap;
-    public Sequencer2 sequencer;
+    public Sequencer sequencer;
 
     public MessageDialog messageDialog;
 
@@ -96,7 +92,7 @@ public class PlayScreen extends ScreenAdapter {
 
         scene = currentLevel.setup(this);
 
-        sequencer = new Sequencer2();
+        sequencer = new Sequencer();
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,11 +17,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.controllers.Controllers;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
-
-import java.util.Objects;
-
-import static nz.ac.auckland.touchinggrass.Score.incrementScore;
 
 public class Player extends Entity{
     private final Animation<TextureRegion> leftAnimation;
@@ -153,28 +147,28 @@ public class Player extends Entity{
             if (object instanceof FlagTile) {
                 FlagTile flag = (FlagTile) object;
                 OrthographicCamera camera = scene.getCamera();
-                Sequencer2 sequencer = new Sequencer2();
-                sequencer.addAction(new Sequencer2.Action(0, () ->
+                Sequencer sequencer = new Sequencer();
+                sequencer.addAction(new Sequencer.Action(0, () ->
                         camera.zoom = -camera.zoom
                 ));
-                sequencer.addAction(new Sequencer2.Action(5, () -> {
+                sequencer.addAction(new Sequencer.Action(5, () -> {
                     System.out.println("Australia Flag duration over");
                 }));
-                sequencer.addAction(new Sequencer2.Action(0, () ->
+                sequencer.addAction(new Sequencer.Action(0, () ->
                         camera.zoom = -camera.zoom
                 ));
                 scene.removeObject(flag);
                 return true;
             } else if (object instanceof MushroomTile) {
                 MushroomTile mushroom = (MushroomTile) object;
-                Sequencer2 sequencer = new Sequencer2();
-                sequencer.addAction(new Sequencer2.Action(0, () ->
+                Sequencer sequencer = new Sequencer();
+                sequencer.addAction(new Sequencer.Action(0, () ->
                         setToggleEnlargeSprite(true)
                 ));
-                sequencer.addAction(new Sequencer2.Action(10, () -> {
+                sequencer.addAction(new Sequencer.Action(10, () -> {
                     System.out.println("Mushroom duration over");
                 }));
-                sequencer.addAction(new Sequencer2.Action(0, () ->
+                sequencer.addAction(new Sequencer.Action(0, () ->
                         setToggleEnlargeSprite(false)
                 ));
                 scene.removeObject(mushroom);
