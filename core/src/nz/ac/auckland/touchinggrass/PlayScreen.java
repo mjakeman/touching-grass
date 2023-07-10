@@ -194,20 +194,20 @@ public class PlayScreen extends ScreenAdapter {
 
     public void handleCameraInput() {
 
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.zoom -= 0.03f;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            float sign = camera.zoom > 0 ? 1 : -1;
+            camera.zoom = Math.abs(camera.zoom) - 0.03f;
+            camera.zoom = (float) Math.max(0.1, Math.abs(camera.zoom)) * sign;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.zoom += 0.03f;
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            float sign = camera.zoom > 0 ? 1 : -1;
+            camera.zoom = Math.abs(camera.zoom) + 0.03f;
+            camera.zoom = (float) Math.min(2, Math.abs(camera.zoom)) * sign;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             System.out.println(camera.position);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-
         }
 
 //        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
