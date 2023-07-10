@@ -45,14 +45,14 @@ public class MainLevel extends Level {
 
     @Override
     public Scene setup(PlayScreen screen) {
-        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
+        cursorPixmap = new Pixmap(Gdx.files.internal("hand.png"));
 
         float h = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
 
-        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
+        click = Gdx.audio.newSound(Gdx.files.internal("click.ogg"));
 
         scene = new Scene(screen.camera);
 
@@ -63,7 +63,7 @@ public class MainLevel extends Level {
         tiledMap = new TmxMapLoader().load("test-map-3d.tmx");
         mapRenderer = new MapRenderer(tiledMap);
 
-        TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
+        TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("back.png"))));
         ImageButton.ImageButtonStyle backStyle = new ImageButton.ImageButtonStyle();
         backStyle.up = backDrawable;
 

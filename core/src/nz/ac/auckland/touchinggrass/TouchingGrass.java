@@ -19,7 +19,7 @@ public class TouchingGrass extends Game {
 		setScreen(menuScreen);
 
 		// Load and play the background music
-		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("../assets/m.ogg"));
+		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("m.ogg"));
 		backgroundMusic.setLooping(true);
 		backgroundMusic.play();
 	}

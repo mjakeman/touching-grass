@@ -32,10 +32,10 @@ public class MenuScreen extends ScreenAdapter {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("../assets/menu.png"));
-        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
+        background = new Texture(Gdx.files.internal("menu.png"));
+        cursorPixmap = new Pixmap(Gdx.files.internal("hand.png"));
 
-        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
+        click = Gdx.audio.newSound(Gdx.files.internal("click.ogg"));
 
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -43,8 +43,8 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        TextureRegionDrawable playDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/play.png"))));
-        TextureRegionDrawable helpDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/help.png"))));
+        TextureRegionDrawable playDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("play.png"))));
+        TextureRegionDrawable helpDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("help.png"))));
 
         ImageButton.ImageButtonStyle playStyle = new ImageButton.ImageButtonStyle();
         playStyle.up = playDrawable;

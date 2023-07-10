@@ -39,7 +39,7 @@ public class Player extends Entity{
 
         nonBatchable = true;
 
-        soundEffect = Gdx.audio.newSound(Gdx.files.internal("../assets/lawnmower.ogg"));
+        soundEffect = Gdx.audio.newSound(Gdx.files.internal("lawnmower.ogg"));
 
         // super(new Texture(Gdx.files.internal("grass.png")));
         Texture spriteSheet = getTexture();

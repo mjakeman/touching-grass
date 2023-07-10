@@ -54,14 +54,14 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         super.show();
 
-        click = Gdx.audio.newSound(Gdx.files.internal("../assets/click.ogg"));
+        click = Gdx.audio.newSound(Gdx.files.internal("click.ogg"));
 
         // Setup UI
-        cursorPixmap = new Pixmap(Gdx.files.internal("../assets/hand.png"));
+        cursorPixmap = new Pixmap(Gdx.files.internal("hand.png"));
 
         float h = Gdx.graphics.getHeight();
 
-        TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("../assets/back.png"))));
+        TextureRegionDrawable backDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("back.png"))));
         ImageButton.ImageButtonStyle backStyle = new ImageButton.ImageButtonStyle();
         backStyle.up = backDrawable;
 
