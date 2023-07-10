@@ -2,6 +2,7 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;
@@ -142,7 +143,7 @@ public class Player extends Entity{
         return ground;
     }
 
-    private boolean handleCollision(Scene scene, List<SceneObject> objects) {
+    private boolean handleCollision(PlayScreen screen, Scene scene, List<SceneObject> objects) {
         for (SceneObject object : objects) {
             if (object instanceof FlagTile) {
                 FlagTile flag = (FlagTile) object;
@@ -157,6 +158,7 @@ public class Player extends Entity{
                 sequencer.addAction(new Sequencer.Action(0, () ->
                         camera.zoom = -camera.zoom
                 ));
+                screen.addEffectSequencer(sequencer);
                 scene.removeObject(flag);
                 return true;
             } else if (object instanceof MushroomTile) {
@@ -171,6 +173,7 @@ public class Player extends Entity{
                 sequencer.addAction(new Sequencer.Action(0, () ->
                         setToggleEnlargeSprite(false)
                 ));
+                screen.addEffectSequencer(sequencer);
                 scene.removeObject(mushroom);
 
                 return true;
@@ -185,7 +188,7 @@ public class Player extends Entity{
         return objects.isEmpty();
     }
 
-    public void handleInput(Scene scene, Player player, float deltaTime) {
+    public void handleInput(PlayScreen screen, Scene scene, Player player, float deltaTime) {
         Vector3 orientation = new Vector3();
 
 //        System.out.println(Controllers.getControllers().size);
@@ -283,13 +286,13 @@ public class Player extends Entity{
         // Collision detection
         player.position.add(translationX);
         List<SceneObject> checkForCollision = scene.testAABBCollisions(player);
-        if (!handleCollision(scene, checkForCollision)) {
+        if (!handleCollision(screen, scene, checkForCollision)) {
             player.position.sub(translationX);
         }
 
         player.position.add(translationZ);
         checkForCollision = scene.testAABBCollisions(player);
-        if (!handleCollision(scene, checkForCollision)) {
+        if (!handleCollision(screen, scene, checkForCollision)) {
             player.position.sub(translationZ);
         }
 

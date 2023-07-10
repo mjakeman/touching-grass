@@ -112,8 +112,8 @@ public class IntroLevel extends Level {
     }
 
     @Override
-    public void update(Matrix4 projectionMatrix, float deltaTime, float stateTime) {
-        player.handleInput(scene, player, deltaTime);
+    public void update(PlayScreen screen, Matrix4 projectionMatrix, float deltaTime, float stateTime) {
+        player.handleInput(screen, scene, player, deltaTime);
     }
 
     @Override

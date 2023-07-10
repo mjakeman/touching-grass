@@ -2,7 +2,6 @@ package nz.ac.auckland.touchinggrass;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -98,8 +97,8 @@ public class MainLevel extends Level {
     }
 
     @Override
-    public void update(Matrix4 projectionMatrix, float deltaTime, float stateTime) {
-        player.handleInput(scene, player, deltaTime);
+    public void update(PlayScreen screen, Matrix4 projectionMatrix, float deltaTime, float stateTime) {
+        player.handleInput(screen, scene, player, deltaTime);
     }
 
     @Override

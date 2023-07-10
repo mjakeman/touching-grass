@@ -15,6 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class PlayScreen extends ScreenAdapter {
 
     SpriteBatch batch;
@@ -42,11 +47,21 @@ public class PlayScreen extends ScreenAdapter {
 
     public MessageDialog messageDialog;
 
+    private HashMap<Sequencer, Boolean> effectSequencers;
+
     private Sound click;
+
+    public void addEffectSequencer(Sequencer effectSequencer) {
+        effectSequencer.addAction(new Sequencer.Action(0, () -> {
+            effectSequencers.put(effectSequencer, true);
+        }));
+        effectSequencers.put(effectSequencer, false);
+    }
 
     PlayScreen(SpriteBatch batch)
     {
         this.batch = batch;
+        this.effectSequencers = new HashMap<Sequencer, Boolean>();
 //        healthBar = new HealthBar(batch, 100);
     }
 
@@ -119,7 +134,14 @@ public class PlayScreen extends ScreenAdapter {
         if (sequencer.step(delta))
             return;
 
-        currentLevel.update(camera.combined, delta, stateTime);
+        for (Sequencer effectSequencer : effectSequencers.keySet()) {
+            if (effectSequencers.get(effectSequencer)) continue;
+            effectSequencer.step(delta); // don't allow blocking?
+        }
+
+        effectSequencers.entrySet().removeIf(Map.Entry::getValue);
+
+        currentLevel.update(this, camera.combined, delta, stateTime);
         scene.update(delta);
 
         boolean hovering = backButton.isOver();
